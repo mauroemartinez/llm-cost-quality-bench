@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: reply\nYou write the buyer's reply to one supplier message, as the purchasing team of an importer.\n- English, short and polite. No placeholders, no brackets.\n- Never mention that we have a \"target\" or any internal limit; never explain your reasoning.\nAnswer with JSON only: {\"reply\": string}\nSituation: The supplier asked us something before quoting. Answer it from our facts, briefly, and invite them to quote.",
+  "user": "Our order: 3000 pcs of ceramic coffee mug 350 ml. The most we are willing to pay: USD 0.91 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: no. Packaging: export cartons.\nSupplier: Blue Pavilion Lighting\nSupplier message:\nDear friend,\nThanks for your inquiry about the ceramic coffee mug 350 ml. Before quoting we need to confirm something.\nShould we add your logo, or plain without printing?\nKind regards\nWhat we read from the message (JSON): {\"intent\":\"question\",\"quote\":{\"price\":null,\"currency\":null,\"moq\":null,\"moq_unit\":null,\"lead_time_days\":null,\"incoterm\":null,\"payment_terms\":null}}",
+  "max_tokens": 400,
+  "temperature": 0.0
+ },
+ "text": "{\"reply\": \"Dear Blue Pavilion Lighting, Thank you for your message. No logo printing is needed; please supply the mugs plain. Packaging should be in export cartons. Our order is for 3000 pcs of the ceramic coffee mug 350 ml, delivered to Santos. Please send us your quotation.\"}",
+ "usage": {
+  "input_tokens": 291,
+  "cached_tokens": 0,
+  "output_tokens": 65,
+  "exact": true
+ },
+ "latency_ms": 1494.328000000678,
+ "recorded_at": "2026-10-29T20:16:08+00:00"
+}

@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 2000 rolls of LED strip light 5 m. The most we are willing to pay: USD 2.37 per rolls (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Buenos Aires. Logo printing: yes. Packaging: export cartons.\nSupplier: Golden Harbor Trading\nSupplier message:\nDear friend,\nThanks for your inquiry about the LED strip light 5 m.\nFOB Shanghai price: USD 2.60/rolls.\nMOQ is 300 rolls.\nProduction time about 6 weeks.\nPayment: 100% T/T in advance.\nAny question please let me know.\nBest regards",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\": \"quote\"}",
+ "usage": {
+  "input_tokens": 284,
+  "cached_tokens": 128,
+  "output_tokens": 7,
+  "exact": true
+ },
+ "latency_ms": 1062.5559999898542,
+ "recorded_at": "2026-10-29T20:22:47+00:00"
+}

@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 3000 pcs of digital kitchen scale. The most we are willing to pay: USD 2.76 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: yes. Packaging: export cartons.\nSupplier: Sunrise Textile Mill\nSupplier message:\nHello,\nThanks for your inquiry about the digital kitchen scale.\nUnit price 2.95 USD (EXW Shenzhen).\nIf you prefer, we can also offer DDP to your warehouse at USD 3.73 per pcs.\nMinimum order 300 pcs.\nLead time 25-30 days.\nWe accept 50% deposit, balance against copy of B/L.\nPlease confirm the quantiy so we can prepare the PI.\nWaiting for your reply",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\": \"quote\"}",
+ "usage": {
+  "input_tokens": 313,
+  "cached_tokens": 128,
+  "output_tokens": 7,
+  "exact": true
+ },
+ "latency_ms": 1028.169400000479,
+ "recorded_at": "2026-10-29T20:20:45+00:00"
+}

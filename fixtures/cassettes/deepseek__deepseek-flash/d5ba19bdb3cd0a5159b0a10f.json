@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 3000 pcs of memory foam pillow 60 x 40 cm. The most we are willing to pay: USD 2.88 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Valparaiso. Logo printing: no. Packaging: export cartons.\nSupplier: Golden Harbor Trading\nSupplier message:\nDear Sir/Madam,\nSorry, we do not produce the memory foam pillow 60 x 40 cm. We only make related items.\nThanks for understanding.\nHave a nice day",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\": \"decline\"}",
+ "usage": {
+  "input_tokens": 264,
+  "cached_tokens": 128,
+  "output_tokens": 8,
+  "exact": true
+ },
+ "latency_ms": 1259.6675000095274,
+ "recorded_at": "2026-10-29T20:23:37+00:00"
+}

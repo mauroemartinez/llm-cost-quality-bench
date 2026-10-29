@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 3000 rolls of LED strip light 5 m. The most we are willing to pay: USD 2.36 per rolls (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: yes. Packaging: export cartons.\nSupplier: Redwood Outdoor Gear\nSupplier message:\nHi,\nThanks for your inquiry about the LED strip light 5 m.\nNormally USD 2.83/rolls CIF. For this order I can offer USD 2.60 per rolls.\nIf you prefer, we can also offer DDP to your warehouse at USD 3.40 per rolls.\nMOQ: 2000 rolls per colour.\nWe accept 100% T/T in advance.\nPlease confirm the quantity so we can prepare the PI.\nKind regards",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\": \"quote\"}",
+ "usage": {
+  "input_tokens": 318,
+  "cached_tokens": 128,
+  "output_tokens": 7,
+  "exact": true
+ },
+ "latency_ms": 1212.1370999957435,
+ "recorded_at": "2026-10-29T20:21:50+00:00"
+}

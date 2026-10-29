@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 5000 pcs of memory foam pillow 60 x 40 cm. The most we are willing to pay: USD 2.80 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Montevideo. Logo printing: yes. Packaging: export cartons.\nSupplier: Sunrise Textile Mill\nSupplier message:\nHello dear,\nSorry, USD 2.80 is below our cost. Our best price is USD 3.51 per pcs FOB.\nHave a nice day",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\": \"counter_reply\"}",
+ "usage": {
+  "input_tokens": 261,
+  "cached_tokens": 0,
+  "output_tokens": 9,
+  "exact": true
+ },
+ "latency_ms": 963.5750000015832,
+ "recorded_at": "2026-10-29T20:15:29+00:00"
+}

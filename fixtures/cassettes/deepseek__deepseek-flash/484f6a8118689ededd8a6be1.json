@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 3000 pcs of ceramic coffee mug 350 ml. The most we are willing to pay: USD 0.91 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: no. Packaging: export cartons.\nSupplier: Blue Pavilion Lighting\nSupplier message:\nDear friend,\nThanks for your inquiry about the ceramic coffee mug 350 ml. Before quoting we need to confirm something.\nShould we add your logo, or plain without printing?\nKind regards",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\": \"question\"}",
+ "usage": {
+  "input_tokens": 259,
+  "cached_tokens": 0,
+  "output_tokens": 7,
+  "exact": true
+ },
+ "latency_ms": 1226.3210999954026,
+ "recorded_at": "2026-10-29T20:16:06+00:00"
+}

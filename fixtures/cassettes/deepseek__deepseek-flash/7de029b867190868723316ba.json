@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: reply\nYou write the buyer's reply to one supplier message, as the purchasing team of an importer.\n- English, short and polite. No placeholders, no brackets.\n- Never mention that we have a \"target\" or any internal limit; never explain your reasoning.\nAnswer with JSON only: {\"reply\": string}\nSituation: The supplier asked us something before quoting. Answer it from our facts, briefly, and invite them to quote.",
+  "user": "Our order: 500 sets of stainless steel cutlery set. The most we are willing to pay: USD 3.78 per sets (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Valparaiso. Logo printing: no. Packaging: export cartons.\nSupplier: Blue Pavilion Lighting\nSupplier message:\nHello,\nThanks for your inquiry about the stainless steel cutlery set. Before quoting we need to confirm something.\nWhat packaging do you need, export cartons or colour box?\nThanks and regards\nWhat we read from the message (JSON): {\"intent\":\"question\",\"quote\":{\"price\":null,\"currency\":null,\"moq\":null,\"moq_unit\":null,\"lead_time_days\":null,\"incoterm\":null,\"payment_terms\":null}}",
+  "max_tokens": 400,
+  "temperature": 0.0
+ },
+ "text": "{\"reply\": \"Thank you for your message. We require export cartons for the packaging. Please proceed with your quotation for 500 sets to Valparaiso, without logo printing.\"}",
+ "usage": {
+  "input_tokens": 293,
+  "cached_tokens": 0,
+  "output_tokens": 39,
+  "exact": true
+ },
+ "latency_ms": 1068.7127000128385,
+ "recorded_at": "2026-10-29T20:22:27+00:00"
+}

@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 5000 pcs of cotton tote bag. The most we are willing to pay: USD 0.57 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Montevideo. Logo printing: yes. Packaging: export cartons.\nSupplier: Lantern Hill Industrial\nSupplier message:\nDear friend,\nThanks for your inquiry about the cotton tote bag.\nFOB Qingdao price: USD 0.72/pcs.\nMOQ: 100 pcs per colour.\nLead time 45 days.\nWe accept 100% T/T in advance.\nAny question please let me know.\nBest regards",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\": \"quote\"}",
+ "usage": {
+  "input_tokens": 285,
+  "cached_tokens": 128,
+  "output_tokens": 7,
+  "exact": true
+ },
+ "latency_ms": 1189.0419000119437,
+ "recorded_at": "2026-10-29T20:13:06+00:00"
+}

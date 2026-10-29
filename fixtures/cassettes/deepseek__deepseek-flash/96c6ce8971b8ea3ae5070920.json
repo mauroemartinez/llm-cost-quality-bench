@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 5000 pcs of rubber yoga mat 6 mm. The most we are willing to pay: USD 4.27 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Montevideo. Logo printing: yes. Packaging: export cartons.\nSupplier: Redwood Outdoor Gear\nSupplier message:\nDear Sir/Madam,\nThanks for your inquiry about the rubber yoga mat 6 mm.\nOur price is USD 5.94 per pcs FOB Shenzhen. After checking with my manager we can do USD 5.40 for you.\nIf you prefer, we can also offer DDP to your warehouse at USD 7.21 per pcs.\nMOQ: 200 pcs per colour.\nLead time 20 days.\nAny question please let me know.\nKind regards",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\": \"quote\"}",
+ "usage": {
+  "input_tokens": 322,
+  "cached_tokens": 128,
+  "output_tokens": 7,
+  "exact": true
+ },
+ "latency_ms": 959.4899000076111,
+ "recorded_at": "2026-10-29T20:17:40+00:00"
+}

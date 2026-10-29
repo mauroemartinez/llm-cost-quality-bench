@@ -81,6 +81,16 @@ def chart_latency(frame: pl.DataFrame, path: Path) -> None:
     plt.close(fig)
 
 
+def _short(label: str) -> str:
+    """The architecture's name as it fits on a chart: 'single (m)' reads
+    'm, one prompt'; 'modular (s + guards, b fallback)' reads 's + guards'."""
+    if label.startswith("single (") and label.endswith(")"):
+        return f"{label[8:-1]}, one prompt"
+    if label.startswith("modular (") and " fallback)" in label:
+        return label[9 : label.rfind(", ")]
+    return label
+
+
 def pareto_frontier(points: list[tuple[float, float, str]]) -> list[tuple[float, float, str]]:
     """Points no other point beats on both cost (lower) and quality (higher)."""
     frontier = []
@@ -96,17 +106,21 @@ def chart_pareto(frame: pl.DataFrame, path: Path) -> list[str]:
     frontier = pareto_frontier(points)
     fig, ax = plt.subplots(figsize=(7, 4.2), dpi=150)
     widest = max(cost for cost, _, _ in points) or 1
+    # Short names by the points, pulled inwards on the right half. Along
+    # the top band, where the good designs crowd, names alternate above
+    # and below from the left so neighbours never run into each other.
+    top = [label for cost, quality, label in sorted(points) if quality >= 0.9]
     for cost, quality, label in points:
         on_frontier = (cost, quality, label) in frontier
         ax.scatter(cost, 100 * quality, s=90 if on_frontier else 60, color=CYAN if on_frontier else GREY, zorder=3)
-        # Names under the points, pulled inwards on the right half.
         right = cost > 0.6 * widest
+        above = label in top and top.index(label) % 2 == 0
         ax.annotate(
-            label,
+            _short(label),
             (cost, 100 * quality),
             fontsize=8,
             ha="right" if right else "left",
-            xytext=(-6 if right else 6, -13),
+            xytext=(-6 if right else 6, 8 if above else -13),
             textcoords="offset points",
         )
     if len(frontier) > 1:
@@ -123,14 +137,16 @@ def chart_pareto(frame: pl.DataFrame, path: Path) -> list[str]:
             continue
         ax.plot([base[0], cost], [100 * base[1], 100 * quality], color=GREY, linewidth=0.9, linestyle=(0, (4, 3)), zorder=1)
         note = f"{100 * (cost / base[0] - 1):+.1f} % cost, {100 * (quality - base[1]):+.1f} pt"
+        # Above a flat line; beside a steep one, where nothing else sits.
+        steep = abs(quality - base[1]) > 0.05
         ax.annotate(
             note,
             ((base[0] + cost) / 2, 100 * (base[1] + quality) / 2),
             fontsize=8,
             color=NAVY,
-            ha="center",
-            va="bottom",
-            xytext=(0, 6),
+            ha="left" if steep else "center",
+            va="center" if steep else "bottom",
+            xytext=(10, 0) if steep else (0, 6),
             textcoords="offset points",
             bbox={"boxstyle": "round,pad=0.25", "facecolor": "white", "edgecolor": "none", "alpha": 0.85},
         )

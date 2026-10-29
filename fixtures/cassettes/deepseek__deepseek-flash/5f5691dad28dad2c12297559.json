@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 500 pcs of foldable camping chair. The most we are willing to pay: USD 8.07 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Montevideo. Logo printing: no. Packaging: export cartons.\nSupplier: Silver Crane Plastics\nSupplier message:\nDear friend,\nThanks for your inquiry about the foldable camping chair.\nOur best price is USD 9.80 per pcs FOB Shanghai.\nIf you prefer, we can also offer DDP to your warehouse at USD 13.04 per pcs.\nMinimum order 200 pcs.\nLead time 20-30 days.\nWe accept 30% deposit, 70% T/T before loading.\nLooking forward to your order.\nWaiting for your reply",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\": \"quote\"}",
+ "usage": {
+  "input_tokens": 314,
+  "cached_tokens": 128,
+  "output_tokens": 7,
+  "exact": true
+ },
+ "latency_ms": 924.2599999997765,
+ "recorded_at": "2026-10-29T20:16:00+00:00"
+}

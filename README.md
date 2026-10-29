@@ -51,21 +51,25 @@ This repository is that method, in the open, on a task anyone can inspect:
 
 Every number this repository produces comes from **synthetic data**. Nothing here is a production message, prompt or price.
 
-**Recorded run, 2026-10-29: OpenAI, gpt-5.4 as the big model and gpt-5.4-mini as the small one, 300 messages, usage reported by the API on every call.** Full report in [docs/report-openai-2026-10-29.md](docs/report-openai-2026-10-29.md). Replay it with no key: `BENCH_MODE=offline bench all --pair openai --n 300`.
+**Recorded run, 2026-10-29: two providers, 300 messages, usage reported by the API on every call.** OpenAI with gpt-5.4 as the big model and gpt-5.4-mini as the small one; DeepSeek with deepseek-v4-pro and deepseek-flash. Full report in [docs/report-2026-10-29.md](docs/report-2026-10-29.md). Replay it with no key: `BENCH_MODE=offline bench all --pair openai --pair deepseek --n 300`.
 
 | Architecture | Fully correct | Cost per 1,000 messages | Latency p50 | Calls per message |
 |---|---|---|---|---|
-| A. One agent, one big prompt (gpt-5.4) | 96.3 % | USD 2.97 | 2.0 s | 1.0 |
-| B. Modular: gpt-5.4-mini with guards, gpt-5.4 as fallback | 96.0 % | USD 0.99 | 3.2 s | 2.3 |
+| gpt-5.4, one prompt | 96.3 % | USD 2.97 | 2.0 s | 1.0 |
+| gpt-5.4-mini with guards, gpt-5.4 as fallback | 96.0 % | USD 0.99 | 3.2 s | 2.3 |
+| deepseek-v4-pro, one prompt | 74.0 % | USD 0.72 | 1.8 s | 1.0 |
+| deepseek-flash with guards, deepseek-v4-pro as fallback | 95.0 % | USD 0.30 | 3.3 s | 2.25 |
 
-![Cost against quality, OpenAI pair](docs/img/pareto-openai.png)
+![Cost against quality, both pairs](docs/img/pareto-2026-10-29.png)
 
-<p align="center"><em>Same quality, a third of the cost: the modular design with guards sits 66.5 % to the left of the single big prompt and 0.3 points below it, within the noise of the calibration run.</em></p>
+<p align="center"><em>Same quality, a fraction of the cost: both modular designs sit on the frontier. The guards are what make a small model usable, and what a big model on one prompt still gets wrong.</em></p>
 
-- The modular design costs **66.5 % less** at the same quality: the 0.3-point gap is one message in 300. On the calibration run (gpt-5.4 against itself on 30 messages) the model gave the same answer 30 times out of 30, so this sample cannot tell the two apart on quality.
-- The guards earned their keep on the small model: they caught 9 replies that leaked our internal limit and 5 that accepted instead of countering, fixed 15 messages with one retry, and sent only 3 of 300 messages to the big model.
-- What each one still gets wrong: the small model reads 9 of 125 plain quotes as another intent; the big model misreads one field in 9 messages (a lead-time range, a currency next to an alternative Incoterm). Neither invents a number: the rules check every figure against the message.
-- The recording cost USD 1.19 at list price (USD 0.89 for the big model, USD 0.30 for the small one), plus USD 0.18 for the calibration.
+- **OpenAI.** The modular design costs **66.5 % less** at the same quality: the 0.3-point gap is one message in 300, and on the calibration run (gpt-5.4 against itself on 30 messages) the model gave the same answer 30 times out of 30.
+- **DeepSeek.** On one prompt, deepseek-v4-pro writes "above our target" in 57 of 300 replies, which the policy forbids (it tells the supplier we have a ceiling), so only 74.0 % of its messages pass. With the guards, deepseek-flash reaches 95.0 % at USD 0.30 per thousand: the cheapest point on the frontier, 58 % below its own big model and 70 % below the OpenAI modular, one point under it. Its calibration also came back 30 out of 30.
+- **The guards earned their keep** on both small models: on gpt-5.4-mini they caught 9 replies that leaked our limit and 5 that accepted instead of countering, fixed 15 messages with one retry and sent 3 to the big model; deepseek-flash needed 2 retries and never the big model.
+- **What each one still gets wrong:** the small models read 9 to 11 of the 125 plain quotes as another intent; gpt-5.4 misreads one field in 9 messages (a lead-time range, a currency next to an alternative Incoterm). Nobody invents a number: the rules check every figure against the message.
+- **Cache and clock.** DeepSeek's automatic prompt cache served 72 % of the big model's input tokens, priced at the cache rate in the ledger. DeepSeek also bills half price off-peak (16:30 to 00:30 UTC), which the ledger does not apply, so the real invoice is below the list cost shown.
+- **What the recordings cost** at list price: OpenAI USD 1.19 plus USD 0.18 of calibration; DeepSeek USD 0.31 plus USD 0.03.
 
 Simulated runs (the mock provider, no model behind it) still run in CI on every push and publish their report as an artifact; those charts only show the shape of the output, not how any model performs.
 

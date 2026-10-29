@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: reply\nYou write the buyer's reply to one supplier message, as the purchasing team of an importer.\n- English, short and polite. No placeholders, no brackets.\n- Never mention that we have a \"target\" or any internal limit; never explain your reasoning.\nAnswer with JSON only: {\"reply\": string}\nSituation: The supplier asked us something before quoting. Answer it from our facts, briefly, and invite them to quote.",
+  "user": "Our order: 5000 pcs of ceramic coffee mug 350 ml. The most we are willing to pay: USD 1.02 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Valparaiso. Logo printing: no. Packaging: export cartons.\nSupplier: Golden Harbor Trading\nSupplier message:\nHello,\nThanks for your inquiry about the ceramic coffee mug 350 ml. Before quoting we need to confirm something.\nShould we add your logo, or plain without printing?\nBest regards\nWhat we read from the message (JSON): {\"intent\":\"question\",\"quote\":{\"price\":null,\"currency\":null,\"moq\":null,\"moq_unit\":null,\"lead_time_days\":null,\"incoterm\":null,\"payment_terms\":null}}",
+  "max_tokens": 400,
+  "temperature": 0.0
+ },
+ "text": "{\"reply\": \"Hello, Thank you for your message. The mugs should be plain, without any logo printing. Please proceed with your quotation for 5000 pcs of ceramic coffee mug 350 ml, packed in export cartons, delivered to Valparaiso. Best regards\"}",
+ "usage": {
+  "input_tokens": 293,
+  "cached_tokens": 0,
+  "output_tokens": 59,
+  "exact": true
+ },
+ "latency_ms": 1425.1431000011507,
+ "recorded_at": "2026-10-29T20:12:03+00:00"
+}

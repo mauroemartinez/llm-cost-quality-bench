@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: reply\nYou write the buyer's reply to one supplier message, as the purchasing team of an importer.\n- English, short and polite. No placeholders, no brackets.\n- Never mention that we have a \"target\" or any internal limit; never explain your reasoning.\nAnswer with JSON only: {\"reply\": string}\nSituation: The supplier sent a quote. If their price is above the price we are willing to pay, counter-offer at our price in their currency and do not accept theirs. Ask for every term they did not state (MOQ, lead time, payment terms). Keep what they did state.",
+  "user": "Our order: 3000 pcs of wireless optical mouse. The most we are willing to pay: USD 2.58 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Buenos Aires. Logo printing: yes. Packaging: export cartons.\nSupplier: Redwood Outdoor Gear\nSupplier message:\nDear Sir/Madam,\nThanks for your inquiry about teh wireless optical mouse.\nUnit price 3.30 USD (FCA Xiamen).\nIf you prefer, we can also offer DDP to your warehouse at USD 4.17 per pcs.\nMinimum order 500 pcs.\nDelivery time 30 to 35 days after deposit.\nPayment terms 30% T/T deposit, 70% befor shipment.\nLooking forward to your order.\nHave a nice day\nWhat we read from the message (JSON): {\"intent\":\"quote\",\"quote\":{\"price\":3.3,\"currency\":\"USD\",\"moq\":500,\"moq_unit\":\"pcs\",\"lead_time_days\":35,\"incoterm\":\"FCA\",\"payment_terms\":\"30% T/T deposit, 70% before shipment\"}}",
+  "max_tokens": 400,
+  "temperature": 0.0
+ },
+ "text": "{\"reply\": \"Dear Redwood Outdoor Gear, Thank you for your quotation. We would like to proceed with 3000 pcs of the wireless optical mouse with logo printing and export carton packaging, delivered to Buenos Aires. Our price is USD 2.58 per pcs. Please confirm the MOQ, lead time, and payment terms for this order. We look forward to your reply.\"}",
+ "usage": {
+  "input_tokens": 400,
+  "cached_tokens": 0,
+  "output_tokens": 82,
+  "exact": true
+ },
+ "latency_ms": 1147.2026999981608,
+ "recorded_at": "2026-10-29T20:16:11+00:00"
+}

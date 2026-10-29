@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 5000 pcs of stainless steel water bottle 750 ml. The most we are willing to pay: USD 2.19 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Montevideo. Logo printing: no. Packaging: export cartons.\nSupplier: Brightway Electronics Co., Ltd.\nSupplier message:\nHello dear,\nThanks for your inquiry about the stainless steel water bottle 750 ml.\nUnit price 2.80 USD (EXW Ningbo).\nMOQ: 3000 pcs per colour.\nDelivery 15 days after deposit.\nAny question please let me know.\nKind regards",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\": \"quote\"}",
+ "usage": {
+  "input_tokens": 284,
+  "cached_tokens": 128,
+  "output_tokens": 7,
+  "exact": true
+ },
+ "latency_ms": 1209.1902999964077,
+ "recorded_at": "2026-10-29T20:18:11+00:00"
+}

@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: reply\nYou write the buyer's reply to one supplier message, as the purchasing team of an importer.\n- English, short and polite. No placeholders, no brackets.\n- Never mention that we have a \"target\" or any internal limit; never explain your reasoning.\nAnswer with JSON only: {\"reply\": string}\nSituation: The supplier sent a quote. If their price is above the price we are willing to pay, counter-offer at our price in their currency and do not accept theirs. Ask for every term they did not state (MOQ, lead time, payment terms). Keep what they did state.",
+  "user": "Our order: 5000 sets of hex key set. The most we are willing to pay: USD 1.15 per sets (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Buenos Aires. Logo printing: no. Packaging: export cartons.\nSupplier: Lantern Hill Industrial\nSupplier message:\nHello dear,\nThanks for your inquiry about teh hex key set.\nOur price is USD 1.59 per sets CIF Shenzhen. After checking with my manager we can do USD 1.45 for you.\nIf you prefer, we can also offer DDP to your warehouse at USD 1.90 per sets.\nMOQ: 500 sets per colour.\nWe accept 100% T/T in advance.\nLooking forward to your order.\nThanks and regards\nWhat we read from the message (JSON): {\"intent\":\"quote\",\"quote\":{\"price\":1.45,\"currency\":\"USD\",\"moq\":500,\"moq_unit\":\"sets\",\"lead_time_days\":null,\"incoterm\":\"CIF\",\"payment_terms\":\"100% T/T in advance\"}}",
+  "max_tokens": 400,
+  "temperature": 0.0
+ },
+ "text": "{\"reply\": \"Thank you for your quote. We can offer USD 1.15 per set CIF Buenos Aires. Please confirm the lead time and whether the MOQ of 500 sets per colour applies to our order of 5000 sets. We note your payment terms of 100% T/T in advance.\"}",
+ "usage": {
+  "input_tokens": 390,
+  "cached_tokens": 0,
+  "output_tokens": 66,
+  "exact": true
+ },
+ "latency_ms": 1545.8882999955676,
+ "recorded_at": "2026-10-29T20:18:03+00:00"
+}

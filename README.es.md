@@ -51,21 +51,25 @@ Este repositorio es ese método, abierto, sobre una tarea que cualquiera puede i
 
 Todo número que produce este repositorio sale de **datos sintéticos**. Nada de acá es un mensaje, un prompt ni un precio de producción.
 
-**Corrida grabada, 29/10/2026: OpenAI, gpt-5.4 como modelo grande y gpt-5.4-mini como chico, 300 mensajes, uso de tokens informado por la API en cada llamada.** Informe completo en [docs/report-openai-2026-10-29.md](docs/report-openai-2026-10-29.md) (en inglés). Se repite sin clave: `BENCH_MODE=offline bench all --pair openai --n 300`.
+**Corrida grabada, 29/10/2026: dos proveedores, 300 mensajes, uso de tokens informado por la API en cada llamada.** OpenAI con gpt-5.4 como modelo grande y gpt-5.4-mini como chico; DeepSeek con deepseek-v4-pro y deepseek-flash. Informe completo en [docs/report-2026-10-29.md](docs/report-2026-10-29.md) (en inglés). Se repite sin clave: `BENCH_MODE=offline bench all --pair openai --pair deepseek --n 300`.
 
 | Arquitectura | Totalmente correctos | Costo por 1.000 mensajes | Latencia p50 | Llamadas por mensaje |
 |---|---|---|---|---|
-| A. Un agente, un prompt grande (gpt-5.4) | 96,3 % | USD 2,97 | 2,0 s | 1,0 |
-| B. Modular: gpt-5.4-mini con controles, gpt-5.4 de respaldo | 96,0 % | USD 0,99 | 3,2 s | 2,3 |
+| gpt-5.4, un prompt | 96,3 % | USD 2,97 | 2,0 s | 1,0 |
+| gpt-5.4-mini con controles, gpt-5.4 de respaldo | 96,0 % | USD 0,99 | 3,2 s | 2,3 |
+| deepseek-v4-pro, un prompt | 74,0 % | USD 0,72 | 1,8 s | 1,0 |
+| deepseek-flash con controles, deepseek-v4-pro de respaldo | 95,0 % | USD 0,30 | 3,3 s | 2,25 |
 
-![Costo contra calidad, par de OpenAI](docs/img/pareto-openai.png)
+![Costo contra calidad, los dos pares](docs/img/pareto-2026-10-29.png)
 
-<p align="center"><em>Misma calidad, un tercio del costo: el diseño modular con controles queda 66,5 % a la izquierda del prompt grande y 0,3 puntos por debajo, dentro del ruido de la calibración.</em></p>
+<p align="center"><em>Misma calidad, una fracción del costo: los dos diseños modulares quedan sobre la frontera. Los controles son lo que vuelve usable a un modelo chico, y lo que un modelo grande con un solo prompt todavía se equivoca.</em></p>
 
-- El diseño modular cuesta **66,5 % menos** con la misma calidad: la diferencia de 0,3 puntos es un mensaje en 300. En la corrida de calibración (gpt-5.4 contra sí mismo sobre 30 mensajes) el modelo dio la misma respuesta 30 veces de 30, así que esta muestra no distingue a los dos en calidad.
-- Los controles se ganaron el lugar sobre el modelo chico: atraparon 9 respuestas que revelaban nuestro límite interno y 5 que aceptaban en vez de contraofertar, arreglaron 15 mensajes con un reintento y mandaron solo 3 de 300 mensajes al modelo grande.
-- Lo que cada uno sigue errando: el modelo chico lee 9 de 125 cotizaciones simples como otra intención; el grande se equivoca en un campo en 9 mensajes (un rango de plazo, una moneda al lado de un Incoterm alternativo). Ninguno inventa un número: las reglas verifican cada cifra contra el mensaje.
-- La grabación costó USD 1,19 a precio de lista (USD 0,89 el modelo grande, USD 0,30 el chico), más USD 0,18 la calibración.
+- **OpenAI.** El diseño modular cuesta **66,5 % menos** con la misma calidad: la diferencia de 0,3 puntos es un mensaje en 300, y en la calibración (gpt-5.4 contra sí mismo sobre 30 mensajes) el modelo dio la misma respuesta 30 veces de 30.
+- **DeepSeek.** Con un solo prompt, deepseek-v4-pro escribe "above our target" en 57 de 300 respuestas, algo que la política prohíbe (le dice al proveedor que tenemos un techo), así que solo pasa el 74,0 % de sus mensajes. Con los controles, deepseek-flash llega a 95,0 % a USD 0,30 por mil: el punto más barato de la frontera, 58 % por debajo de su propio modelo grande y 70 % por debajo del modular de OpenAI, un punto por debajo de él. Su calibración también dio 30 de 30.
+- **Los controles se ganaron el lugar** en los dos modelos chicos: en gpt-5.4-mini atraparon 9 respuestas que revelaban nuestro límite y 5 que aceptaban en vez de contraofertar, arreglaron 15 mensajes con un reintento y mandaron 3 al modelo grande; deepseek-flash necesitó 2 reintentos y nunca el modelo grande.
+- **Lo que cada uno sigue errando:** los modelos chicos leen 9 a 11 de las 125 cotizaciones simples como otra intención; gpt-5.4 se equivoca en un campo en 9 mensajes (un rango de plazo, una moneda al lado de un Incoterm alternativo). Ninguno inventa un número: las reglas verifican cada cifra contra el mensaje.
+- **Caché y horario.** La caché automática de DeepSeek sirvió el 72 % de los tokens de entrada del modelo grande, cobrados a su precio de caché en el libro. DeepSeek además cobra la mitad en horario reducido (16:30 a 00:30 UTC), que el libro no aplica, así que la factura real queda por debajo del costo de lista que se muestra.
+- **Lo que costaron las grabaciones** a precio de lista: OpenAI USD 1,19 más USD 0,18 de calibración; DeepSeek USD 0,31 más USD 0,03.
 
 Las corridas simuladas (el proveedor mock, sin ningún modelo detrás) siguen corriendo en la integración continua en cada push y publican su informe como artefacto; esos gráficos solo muestran la forma de la salida, no el rendimiento de ningún modelo.
 

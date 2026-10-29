@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 5000 sets of PPR pipe fusion welder, gas heated. The most we are willing to pay: USD 198.07 per sets (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Buenos Aires. Logo printing: yes. Packaging: export cartons.\nSupplier: Brightway Electronics Co., Ltd.\nSupplier message:\nHello dear,\nThanks for your inquiry about the PPR pipe fusion welder, gas heated.\nOur price is USD 229.34 per sets EXW Shanghai. After checking with my manager we can do USD 215.00 for you.\nProduction needs 25 days.\nPayment terms 50% deposit, balance against copy of B/L.\nLooking forward to your order.\nHave a nice day",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\": \"counter_reply\"}",
+ "usage": {
+  "input_tokens": 306,
+  "cached_tokens": 128,
+  "output_tokens": 9,
+  "exact": true
+ },
+ "latency_ms": 1274.668500002008,
+ "recorded_at": "2026-10-29T20:12:16+00:00"
+}
