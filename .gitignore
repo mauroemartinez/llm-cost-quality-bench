@@ -1,0 +1,19 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# Runs are reproducible from the cassettes; keep the repo small.
+results/
+
+# Filled-in review sheets may carry a reviewer's notes.
+review/*.filled.csv
+
+# Review sheets are per run; a filled one may carry a reviewer's notes.
+review/

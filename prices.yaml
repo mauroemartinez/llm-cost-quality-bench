@@ -1,0 +1,47 @@
+# List prices in USD per 1M tokens, standard tier (no batch, flex or priority).
+# Every entry carries the date it was read and the official page it came from.
+# "cached_input" is the price of input tokens served from the provider's prompt
+# cache; when a provider reports cached tokens, the cost uses it. Prices change:
+# re-read the pages and bump as_of before a new recording.
+as_of: "2026-10-29"
+
+providers:
+  openai:
+    source: "https://developers.openai.com/api/docs/pricing"
+    read_on: "2026-10-29"
+    notes: "Standard tier, prompts up to 272K tokens. Longer prompts cost more."
+    models:
+      gpt-5.4:      { input: 2.50, cached_input: 0.25,  output: 15.00 }
+      gpt-5.4-mini: { input: 0.75, cached_input: 0.075, output: 4.50 }
+      gpt-5.4-nano: { input: 0.20, cached_input: 0.02,  output: 1.25 }
+      gpt-4.1:      { input: 2.00, cached_input: 0.50,  output: 8.00 }
+      gpt-4.1-mini: { input: 0.40, cached_input: 0.10,  output: 1.60 }
+  anthropic:
+    source: "https://claude.com/pricing"
+    read_on: "2026-10-29"
+    notes: "5-minute cache TTL. Haiku 5.5 prices apply to prompts up to 100K tokens."
+    models:
+      claude-sonnet-5-5: { input: 2.00, cached_input: 0.10, output: 10.00 }
+      claude-haiku-5-5:  { input: 0.10, cached_input: 0.01, output: 0.50 }
+  gemini:
+    source: "https://ai.google.dev/gemini-api/docs/pricing"
+    read_on: "2026-10-29"
+    notes: "Paid tier, standard. gemini-3.8-flash is a launch price until 2026-12-31 (then 1.50 / 0.15 / 7.50). gemini-3.1-pro-preview prices apply to prompts up to 200K tokens. Context caching also bills storage per token-hour, not modelled here."
+    models:
+      gemini-3.1-pro-preview: { input: 2.00, cached_input: 0.20,  output: 12.00 }
+      gemini-3.8-flash:       { input: 0.75, cached_input: 0.075, output: 3.75 }
+      gemini-3.5-flash-lite:  { input: 0.30, cached_input: 0.03,  output: 2.50 }
+  deepseek:
+    source: "https://api-docs.deepseek.com/quick_start/pricing"
+    read_on: "2026-10-29"
+    notes: "Peak-hour prices (01:00-04:00 and 06:00-10:00 UTC, Monday to Friday). Off-peak is half: set BENCH_DEEPSEEK_OFFPEAK=1 to price a run recorded off-peak."
+    models:
+      deepseek-v4-pro: { input: 1.32, cached_input: 0.044, output: 3.96 }
+      deepseek-flash:  { input: 0.30, cached_input: 0.006, output: 1.20 }
+  mock:
+    source: "simulated provider, for tests and dry runs; no real model behind it"
+    read_on: "2026-10-29"
+    notes: "Prices copied from a big and a small real model so the pipeline produces plausible costs. Results from mock models are SIMULATED and labelled as such in every report."
+    models:
+      mock-big:   { input: 2.50, cached_input: 0.25,  output: 15.00 }
+      mock-small: { input: 0.10, cached_input: 0.01,  output: 0.50 }

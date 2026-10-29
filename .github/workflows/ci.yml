@@ -1,0 +1,24 @@
+name: offline bench
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: pytest -q
+      # No API keys in CI: the whole pipeline runs on the simulated provider
+      # and, when they exist, on the recorded cassettes.
+      - run: bench all --pair mock --n 300 --run-id ci-mock
+      - uses: actions/upload-artifact@v4
+        with:
+          name: report-ci-mock
+          path: results/ci-mock
