@@ -60,7 +60,9 @@ Todo número que produce este repositorio sale de **datos sintéticos**. Nada de
 
 ![Costo contra calidad, par de OpenAI](docs/img/pareto-openai.png)
 
-- El diseño modular cuesta **67 % menos** con la misma calidad: la diferencia de 0,3 puntos es un mensaje en 300. En la corrida de calibración (gpt-5.4 contra sí mismo sobre 30 mensajes) el modelo dio la misma respuesta 30 veces de 30, así que esta muestra no distingue a los dos en calidad.
+<p align="center"><em>Misma calidad, un tercio del costo: el diseño modular con controles queda 66,5 % a la izquierda del prompt grande y 0,3 puntos por debajo, dentro del ruido de la calibración.</em></p>
+
+- El diseño modular cuesta **66,5 % menos** con la misma calidad: la diferencia de 0,3 puntos es un mensaje en 300. En la corrida de calibración (gpt-5.4 contra sí mismo sobre 30 mensajes) el modelo dio la misma respuesta 30 veces de 30, así que esta muestra no distingue a los dos en calidad.
 - Los controles se ganaron el lugar sobre el modelo chico: atraparon 9 respuestas que revelaban nuestro límite interno y 5 que aceptaban en vez de contraofertar, arreglaron 15 mensajes con un reintento y mandaron solo 3 de 300 mensajes al modelo grande.
 - Lo que cada uno sigue errando: el modelo chico lee 9 de 125 cotizaciones simples como otra intención; el grande se equivoca en un campo en 9 mensajes (un rango de plazo, una moneda al lado de un Incoterm alternativo). Ninguno inventa un número: las reglas verifican cada cifra contra el mensaje.
 - La grabación costó USD 1,19 a precio de lista (USD 0,89 el modelo grande, USD 0,30 el chico), más USD 0,18 la calibración.

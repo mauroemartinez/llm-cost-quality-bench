@@ -95,12 +95,45 @@ def chart_pareto(frame: pl.DataFrame, path: Path) -> list[str]:
     points = list(zip(frame["cost_per_1k_usd"].to_list(), frame["correct"].to_list(), frame["arch"].to_list(), strict=True))
     frontier = pareto_frontier(points)
     fig, ax = plt.subplots(figsize=(7, 4.2), dpi=150)
+    widest = max(cost for cost, _, _ in points) or 1
     for cost, quality, label in points:
         on_frontier = (cost, quality, label) in frontier
         ax.scatter(cost, 100 * quality, s=90 if on_frontier else 60, color=CYAN if on_frontier else GREY, zorder=3)
-        ax.annotate(label, (cost, 100 * quality), fontsize=8, xytext=(6, 4), textcoords="offset points")
+        # Names under the points, pulled inwards on the right half.
+        right = cost > 0.6 * widest
+        ax.annotate(
+            label,
+            (cost, 100 * quality),
+            fontsize=8,
+            ha="right" if right else "left",
+            xytext=(-6 if right else 6, -13),
+            textcoords="offset points",
+        )
     if len(frontier) > 1:
         ax.plot([c for c, _, _ in frontier], [100 * q for _, q, _ in frontier], color=CYAN, linewidth=1.2, zorder=2)
+    # Each modular design against the single-prompt design on the same big
+    # model: a dashed line between the two and the distance written on it.
+    by_label = {label: (cost, quality) for cost, quality, label in points}
+    for label, (cost, quality) in by_label.items():
+        if not label.startswith("modular (") or " fallback)" not in label:
+            continue
+        big = label[label.rfind(", ") + 2 : label.rfind(" fallback)")]
+        base = by_label.get(f"single ({big})")
+        if not base or base[0] <= 0:
+            continue
+        ax.plot([base[0], cost], [100 * base[1], 100 * quality], color=GREY, linewidth=0.9, linestyle=(0, (4, 3)), zorder=1)
+        note = f"{100 * (cost / base[0] - 1):+.1f} % cost, {100 * (quality - base[1]):+.1f} pt"
+        ax.annotate(
+            note,
+            ((base[0] + cost) / 2, 100 * (base[1] + quality) / 2),
+            fontsize=8,
+            color=NAVY,
+            ha="center",
+            va="bottom",
+            xytext=(0, 6),
+            textcoords="offset points",
+            bbox={"boxstyle": "round,pad=0.25", "facecolor": "white", "edgecolor": "none", "alpha": 0.85},
+        )
     ax.set_xlabel("cost per 1,000 messages (USD)")
     ax.set_ylabel("fully correct messages (%)")
     ax.set_title("Cost against quality: the Pareto frontier in cyan", loc="left", fontsize=11, color=NAVY)

@@ -60,7 +60,9 @@ Every number this repository produces comes from **synthetic data**. Nothing her
 
 ![Cost against quality, OpenAI pair](docs/img/pareto-openai.png)
 
-- The modular design costs **67 % less** at the same quality: the 0.3-point gap is one message in 300. On the calibration run (gpt-5.4 against itself on 30 messages) the model gave the same answer 30 times out of 30, so this sample cannot tell the two apart on quality.
+<p align="center"><em>Same quality, a third of the cost: the modular design with guards sits 66.5 % to the left of the single big prompt and 0.3 points below it, within the noise of the calibration run.</em></p>
+
+- The modular design costs **66.5 % less** at the same quality: the 0.3-point gap is one message in 300. On the calibration run (gpt-5.4 against itself on 30 messages) the model gave the same answer 30 times out of 30, so this sample cannot tell the two apart on quality.
 - The guards earned their keep on the small model: they caught 9 replies that leaked our internal limit and 5 that accepted instead of countering, fixed 15 messages with one retry, and sent only 3 of 300 messages to the big model.
 - What each one still gets wrong: the small model reads 9 of 125 plain quotes as another intent; the big model misreads one field in 9 messages (a lead-time range, a currency next to an alternative Incoterm). Neither invents a number: the rules check every figure against the message.
 - The recording cost USD 1.19 at list price (USD 0.89 for the big model, USD 0.30 for the small one), plus USD 0.18 for the calibration.
