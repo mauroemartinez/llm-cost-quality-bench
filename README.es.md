@@ -60,7 +60,7 @@ Así se ve la salida, con el proveedor simulado:
 
 *Proveedor simulado: dos "modelos" falsos con tasas de error programadas, para ejercitar el pipeline. No es un resultado sobre ningún modelo real.*
 
-En nuestro trabajo de producción usamos este mismo procedimiento antes de un cambio de modelo: repetir llamadas reales en un sandbox sin enviar nada, juzgarlas contra el modelo actual con reglas más un juez, revisar a mano los desacuerdos y recién entonces proponer el cambio con el costo por llamada y la proyección mensual al lado. Los números de ese trabajo se publican solo donde están documentados.
+En nuestro propio trabajo de producción usamos este mismo procedimiento antes de un cambio de modelo: repetimos 262 turnos reales de negociación en un sandbox sin enviar nada, los juzgamos contra el modelo actual con reglas más un juez y revisamos a mano los desacuerdos. La configuración más barata, lograda optimizando el uso de los modelos, costó 87 % menos por llamada con la misma calidad (alrededor de 95 % de coincidencia con el modelo actual en la revisión manual), un ahorro de 96 % proyectado al volumen de ese mes. Esos números salen de esa medición documentada, no de este repositorio; acá todo es sintético.
 
 ## Stack
 
