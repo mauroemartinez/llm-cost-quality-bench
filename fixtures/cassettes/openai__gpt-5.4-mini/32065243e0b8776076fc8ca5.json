@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 1000 pcs of foldable camping chair. The most we are willing to pay: USD 7.40 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: no. Packaging: export cartons.\nSupplier: Redwood Outdoor Gear\nSupplier message:\nHello,\nThanks for your inquiry about the foldable camping chair.\nOur best price is CNY 70.56 per pcs EXW Shanghai.\nIf you prefer, we can also offer DDP to your warehouse at CNY 92.85 per pcs.\nMOQ: 200 pcs per colour.\nDelivery 20 days after deposit.\nPayment terms 50% deposit, balance against copy of B/L.\nAny question please let me know.\nThanks and regards",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\":\"quote\"}",
+ "usage": {
+  "input_tokens": 287,
+  "cached_tokens": 0,
+  "output_tokens": 11,
+  "exact": true
+ },
+ "latency_ms": 1059.2589000007138,
+ "recorded_at": "2026-10-29T19:19:40+00:00"
+}

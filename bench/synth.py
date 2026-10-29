@@ -187,16 +187,19 @@ def _counter_reply_message(
     incoterm = rng.choice(["FOB", "EXW", "CIF"])
     kind = rng.random()
     lines = [rng.choice(GREETINGS)]
+    quantity_stated = False
     if kind < 0.5:
         price = target
-        lines.append(
-            rng.choice(
-                [
-                    f"Ok, we accept USD {_money(target)} per {unit} {incoterm} for {ours.quantity} {unit}.",
-                    f"After discussion with the factory we can accept your price USD {_money(target)} {incoterm}.",
-                ]
-            )
+        accepted = rng.choice(
+            [
+                f"Ok, we accept USD {_money(target)} per {unit} {incoterm} for {ours.quantity} {unit}.",
+                f"After discussion with the factory we can accept your price USD {_money(target)} {incoterm}.",
+            ]
         )
+        lines.append(accepted)
+        # When the acceptance names the quantity, that is the quantity on the
+        # table: the truth carries it, as any reader would.
+        quantity_stated = " for " in accepted
         lines.append(rng.choice(["Please confirm so we prepare the proforma invoice.", "Shall we go ahead with the PI?"]))
         reply = ReplyRequirements(must_ask=["proforma invoice"])
     elif kind < 0.8:
@@ -222,7 +225,13 @@ def _counter_reply_message(
         )
         reply = ReplyRequirements(must_counter=True)
     lines.append(rng.choice(SIGNOFFS))
-    quote = Quote(price=price, currency="USD", incoterm=incoterm)
+    quote = Quote(
+        price=price,
+        currency="USD",
+        incoterm=incoterm,
+        moq=ours.quantity if quantity_stated else None,
+        moq_unit=unit if quantity_stated else None,
+    )
     return "\n".join(lines), quote, reply
 
 

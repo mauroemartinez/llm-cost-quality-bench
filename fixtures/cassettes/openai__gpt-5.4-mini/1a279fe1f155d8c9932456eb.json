@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "system": "TASK: reply\nYou write the buyer's reply to one supplier message, as the purchasing team of an importer.\n- English, short and polite. No placeholders, no brackets.\n- Never mention that we have a \"target\" or any internal limit; never explain your reasoning.\nAnswer with JSON only: {\"reply\": string}\nSituation: The supplier asked us something before quoting. Answer it from our facts, briefly, and invite them to quote.",
+  "user": "Our order: 3000 pcs of bluetooth speaker. The most we are willing to pay: USD 6.70 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: yes. Packaging: export cartons.\nSupplier: Northstar Tools Manufacture\nSupplier message:\nHello,\nThanks for your inquiry about the bluetooth speaker. Before quoting we need to confirm something.\nWhich is your destination port?\nBest regards\nWhat we read from the message (JSON): {\"intent\":\"question\",\"quote\":{\"price\":null,\"currency\":null,\"moq\":null,\"moq_unit\":null,\"lead_time_days\":null,\"incoterm\":null,\"payment_terms\":null}}",
+  "max_tokens": 400,
+  "temperature": 0.0
+ },
+ "text": "{\"reply\":\"Hello,\\n\\nOur destination port is Santos. Please proceed with your quotation for 3,000 pcs bluetooth speakers, logo printing required, packed in export cartons.\\n\\nBest regards.\"}",
+ "usage": {
+  "input_tokens": 252,
+  "cached_tokens": 0,
+  "output_tokens": 48,
+  "exact": true
+ },
+ "latency_ms": 1107.8994999988936,
+ "recorded_at": "2026-10-29T19:30:50+00:00"
+}

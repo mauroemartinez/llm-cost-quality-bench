@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 500 pairs of children's rain boots. The most we are willing to pay: USD 3.88 per pairs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: yes. Packaging: export cartons.\nSupplier: Lantern Hill Industrial\nSupplier message:\nHello,\nUnfortunately we cannot supply the children's rain boots at the moment, our line is fully booked.\nHope to cooperate in the future.\nHave a nice day",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\":\"decline\"}",
+ "usage": {
+  "input_tokens": 225,
+  "cached_tokens": 0,
+  "output_tokens": 12,
+  "exact": true
+ },
+ "latency_ms": 1090.0497999973595,
+ "recorded_at": "2026-10-29T19:21:47+00:00"
+}

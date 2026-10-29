@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 2000 sets of hex key set. The most we are willing to pay: USD 1.16 per sets (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: no. Packaging: export cartons.\nSupplier: Redwood Outdoor Gear\nSupplier message:\nDear friend,\nThanks for your inquiry about the hex key set.\nUnit price 1.45 USD (FOB Ningbo).\nMinimum order 300 sets.\nLead time 45 days.\nPayment terms 30% T/T deposit, 70% before shipment.\nLooking forward to your order.\nKind regards",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\":\"quote\"}",
+ "usage": {
+  "input_tokens": 256,
+  "cached_tokens": 0,
+  "output_tokens": 11,
+  "exact": true
+ },
+ "latency_ms": 802.6602999889292,
+ "recorded_at": "2026-10-29T19:28:45+00:00"
+}

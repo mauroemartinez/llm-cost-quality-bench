@@ -17,3 +17,6 @@ review/*.filled.csv
 
 # Review sheets are per run; a filled one may carry a reviewer's notes.
 review/
+
+# Local run logs.
+*.log

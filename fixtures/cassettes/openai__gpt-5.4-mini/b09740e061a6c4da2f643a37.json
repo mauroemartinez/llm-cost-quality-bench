@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 1000 pcs of aluminium laptop stand. The most we are willing to pay: USD 5.56 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: yes. Packaging: export cartons.\nSupplier: Blue Pavilion Lighting\nSupplier message:\nDear friend,\nThanks for your inquiry about the aluminium laptop stand.\nOur best price is USD 6.90 per pcs FOB Qingdao.\nMOQ is 100 pcs.\nLead time 30 days.\nWe accept 100% T/T in advance.\nPlease confirm the quantity so we can prepare the PI.\nBest regards",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\":\"quote\"}",
+ "usage": {
+  "input_tokens": 258,
+  "cached_tokens": 0,
+  "output_tokens": 11,
+  "exact": true
+ },
+ "latency_ms": 907.7363999967929,
+ "recorded_at": "2026-10-29T19:31:35+00:00"
+}

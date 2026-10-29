@@ -51,14 +51,21 @@ Este repositorio es ese método, abierto, sobre una tarea que cualquiera puede i
 
 Todo número que produce este repositorio sale de **datos sintéticos**. Nada de acá es un mensaje, un prompt ni un precio de producción.
 
-- **Corridas grabadas (modelos reales, repetidas desde cassettes):** ver `docs/` cuando se publique un informe grabado. La grabación usa las API keys del mantenedor y se hace primero sobre una muestra chica (`--n 50`, `--max-usd 2` por defecto).
-- **Corridas simuladas (el proveedor mock, sin ningún modelo detrás):** la integración continua corre todo el pipeline sobre el proveedor simulado y publica el informe como artefacto. Esos gráficos muestran la forma de la salida, no el rendimiento de ningún modelo.
+**Corrida grabada, 29/10/2026: OpenAI, gpt-5.4 como modelo grande y gpt-5.4-mini como chico, 300 mensajes, uso de tokens informado por la API en cada llamada.** Informe completo en [docs/report-openai-2026-10-29.md](docs/report-openai-2026-10-29.md) (en inglés). Se repite sin clave: `BENCH_MODE=offline bench all --pair openai --n 300`.
 
-Así se ve la salida, con el proveedor simulado:
+| Arquitectura | Totalmente correctos | Costo por 1.000 mensajes | Latencia p50 | Llamadas por mensaje |
+|---|---|---|---|---|
+| A. Un agente, un prompt grande (gpt-5.4) | 96,3 % | USD 2,97 | 2,0 s | 1,0 |
+| B. Modular: gpt-5.4-mini con controles, gpt-5.4 de respaldo | 96,0 % | USD 0,99 | 3,2 s | 2,3 |
 
-![Costo contra calidad, proveedor simulado](docs/img/pareto-simulated.png)
+![Costo contra calidad, par de OpenAI](docs/img/pareto-openai.png)
 
-*Proveedor simulado: dos "modelos" falsos con tasas de error programadas, para ejercitar el pipeline. No es un resultado sobre ningún modelo real.*
+- El diseño modular cuesta **67 % menos** con la misma calidad: la diferencia de 0,3 puntos es un mensaje en 300. En la corrida de calibración (gpt-5.4 contra sí mismo sobre 30 mensajes) el modelo dio la misma respuesta 30 veces de 30, así que esta muestra no distingue a los dos en calidad.
+- Los controles se ganaron el lugar sobre el modelo chico: atraparon 9 respuestas que revelaban nuestro límite interno y 5 que aceptaban en vez de contraofertar, arreglaron 15 mensajes con un reintento y mandaron solo 3 de 300 mensajes al modelo grande.
+- Lo que cada uno sigue errando: el modelo chico lee 9 de 125 cotizaciones simples como otra intención; el grande se equivoca en un campo en 9 mensajes (un rango de plazo, una moneda al lado de un Incoterm alternativo). Ninguno inventa un número: las reglas verifican cada cifra contra el mensaje.
+- La grabación costó USD 1,19 a precio de lista (USD 0,89 el modelo grande, USD 0,30 el chico), más USD 0,18 la calibración.
+
+Las corridas simuladas (el proveedor mock, sin ningún modelo detrás) siguen corriendo en la integración continua en cada push y publican su informe como artefacto; esos gráficos solo muestran la forma de la salida, no el rendimiento de ningún modelo.
 
 En nuestro propio trabajo de producción usamos este mismo procedimiento antes de un cambio de modelo: repetimos 262 turnos reales de negociación en un sandbox sin enviar nada, los juzgamos contra el modelo actual con reglas más un juez y revisamos a mano los desacuerdos. La configuración más barata, lograda optimizando el uso de los modelos, costó 87 % menos por llamada con la misma calidad (alrededor de 95 % de coincidencia con el modelo actual en la revisión manual), un ahorro de 96 % proyectado al volumen de ese mes. Esos números salen de esa medición documentada, no de este repositorio; acá todo es sintético.
 

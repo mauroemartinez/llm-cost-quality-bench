@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 2000 pcs of rubber yoga mat 6 mm. The most we are willing to pay: USD 4.37 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: no. Packaging: export cartons.\nSupplier: Evergreen Homeware Factory\nSupplier message:\nDear Sir/Madam,\nUSD 4.37 is too low for us. Best we can do is USD 4.88 FOB.\nWaiting for your reply",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\":\"counter_reply\"}",
+ "usage": {
+  "input_tokens": 231,
+  "cached_tokens": 0,
+  "output_tokens": 12,
+  "exact": true
+ },
+ "latency_ms": 1067.9758000187576,
+ "recorded_at": "2026-10-29T19:26:07+00:00"
+}

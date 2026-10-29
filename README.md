@@ -51,14 +51,21 @@ This repository is that method, in the open, on a task anyone can inspect:
 
 Every number this repository produces comes from **synthetic data**. Nothing here is a production message, prompt or price.
 
-- **Recorded runs (real models, replayed from cassettes):** see `docs/` once a recorded report is published. Recording uses the maintainer's own API keys and is done on a small sample first (`--n 50`, `--max-usd 2` by default).
-- **Simulated runs (the mock provider, no model behind it):** CI runs the whole pipeline on the mock provider and publishes the report as an artifact. Those charts show what the output looks like, not how any model performs.
+**Recorded run, 2026-10-29: OpenAI, gpt-5.4 as the big model and gpt-5.4-mini as the small one, 300 messages, usage reported by the API on every call.** Full report in [docs/report-openai-2026-10-29.md](docs/report-openai-2026-10-29.md). Replay it with no key: `BENCH_MODE=offline bench all --pair openai --n 300`.
 
-Here is the shape of the output, from the simulated provider:
+| Architecture | Fully correct | Cost per 1,000 messages | Latency p50 | Calls per message |
+|---|---|---|---|---|
+| A. One agent, one big prompt (gpt-5.4) | 96.3 % | USD 2.97 | 2.0 s | 1.0 |
+| B. Modular: gpt-5.4-mini with guards, gpt-5.4 as fallback | 96.0 % | USD 0.99 | 3.2 s | 2.3 |
 
-![Cost against quality, simulated provider](docs/img/pareto-simulated.png)
+![Cost against quality, OpenAI pair](docs/img/pareto-openai.png)
 
-*Simulated provider: two fake "models" with programmed error rates, used to exercise the pipeline. Not a result about any real model.*
+- The modular design costs **67 % less** at the same quality: the 0.3-point gap is one message in 300. On the calibration run (gpt-5.4 against itself on 30 messages) the model gave the same answer 30 times out of 30, so this sample cannot tell the two apart on quality.
+- The guards earned their keep on the small model: they caught 9 replies that leaked our internal limit and 5 that accepted instead of countering, fixed 15 messages with one retry, and sent only 3 of 300 messages to the big model.
+- What each one still gets wrong: the small model reads 9 of 125 plain quotes as another intent; the big model misreads one field in 9 messages (a lead-time range, a currency next to an alternative Incoterm). Neither invents a number: the rules check every figure against the message.
+- The recording cost USD 1.19 at list price (USD 0.89 for the big model, USD 0.30 for the small one), plus USD 0.18 for the calibration.
+
+Simulated runs (the mock provider, no model behind it) still run in CI on every push and publish their report as an artifact; those charts only show the shape of the output, not how any model performs.
 
 In our own production work we used this same procedure before a model change: we replayed 262 real negotiation turns in a sandbox without sending anything, judged them against the current model with rules plus a judge, and reviewed the disagreements by hand. The cheaper configuration, reached by optimising how the models are used, cost 87 % less per call at the same quality (about 95 % agreement with the current model on manual review), a 96 % saving when projected to that month's volume. Those numbers come from that documented measurement, not from this repository; everything here is synthetic.
 

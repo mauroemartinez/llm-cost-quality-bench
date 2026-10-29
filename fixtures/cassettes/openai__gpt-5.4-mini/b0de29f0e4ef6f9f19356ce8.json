@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 3000 pcs of plastic storage box 40 l. The most we are willing to pay: USD 2.41 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Buenos Aires. Logo printing: no. Packaging: export cartons.\nSupplier: Redwood Outdoor Gear\nSupplier message:\nDear friend,\nThanks for your inquiry about the plastic storage box 40 l.\nOur best price is USD 3.15 per pcs FOB Xiamen.\nMinimum order 300 pcs.\nLead time 25-30 days.\nPayment terms 50% deposit, balance against copy of B/L.\nPlease confirm the quantity so we can prepare the PI.\nHave a nice day",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\":\"quote\"}",
+ "usage": {
+  "input_tokens": 274,
+  "cached_tokens": 0,
+  "output_tokens": 11,
+  "exact": true
+ },
+ "latency_ms": 934.415199997602,
+ "recorded_at": "2026-10-29T19:19:02+00:00"
+}

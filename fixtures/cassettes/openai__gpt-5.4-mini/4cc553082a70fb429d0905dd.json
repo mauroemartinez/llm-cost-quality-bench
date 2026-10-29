@@ -1,0 +1,19 @@
+{
+ "request": {
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 2000 pcs of wireless optical mouse. The most we are willing to pay: USD 2.82 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Valparaiso. Logo printing: yes. Packaging: export cartons.\nSupplier: Blue Pavilion Lighting\nSupplier message:\nHello,\nThanks for your inquiry about the wireless optical mouse.\nOur best price is USD 3.30 per pcs CIF Shanghai.\nIf you prefer, we can also offer DDP to your warehouse at USD 4.42 per pcs.\nMOQ is 200 pcs.\nLead time 20 days.\nLooking forward to your order.\nThanks and regards",
+  "max_tokens": 60,
+  "temperature": 0.0
+ },
+ "text": "{\"intent\":\"quote\"}",
+ "usage": {
+  "input_tokens": 266,
+  "cached_tokens": 0,
+  "output_tokens": 11,
+  "exact": true
+ },
+ "latency_ms": 948.5015999816824,
+ "recorded_at": "2026-10-29T19:28:16+00:00"
+}
