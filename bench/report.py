@@ -12,6 +12,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import polars as pl  # noqa: E402
+from matplotlib.lines import Line2D  # noqa: E402
 
 from .meter import read_ledger  # noqa: E402
 from .pricing import load_prices  # noqa: E402
@@ -22,6 +23,9 @@ from .synth import load as load_cases  # noqa: E402
 
 NAVY, CYAN, GREY, SAND = "#051e45", "#1fb5e3", "#8a94a6", "#d9d2c5"
 PALETTE = [NAVY, CYAN, "#4f6d8f", "#9bd7ef", GREY, SAND]
+# One colour per provider on the cost-against-quality chart.
+PROVIDER_COLOURS = {"openai": CYAN, "anthropic": "#e8742c", "deepseek": "#1a1a1a", "gemini": "#2f9e6b", "mock": GREY}
+PROVIDER_NAMES = {"openai": "OpenAI", "anthropic": "Anthropic", "deepseek": "DeepSeek", "gemini": "Gemini", "mock": "simulated"}
 
 
 def _pct(value: float) -> str:
@@ -101,59 +105,91 @@ def pareto_frontier(points: list[tuple[float, float, str]]) -> list[tuple[float,
     return sorted(frontier)
 
 
+def _big_model(label: str) -> str | None:
+    """The big model behind an architecture's name, or None."""
+    if label.startswith("single (") and label.endswith(")"):
+        return label[8:-1]
+    if label.startswith("modular (") and " fallback)" in label:
+        return label[label.rfind(", ") + 2 : label.rfind(" fallback)")]
+    return None
+
+
 def chart_pareto(frame: pl.DataFrame, path: Path) -> list[str]:
+    """One colour per provider; a hollow point is the big model on one
+    prompt, a filled one the modular design with guards. Under each
+    modular point, its distance to the one-prompt design on the same big
+    model. Lower left is better; the frontier is the grey line."""
     points = list(zip(frame["cost_per_1k_usd"].to_list(), frame["correct"].to_list(), frame["arch"].to_list(), strict=True))
     frontier = pareto_frontier(points)
-    fig, ax = plt.subplots(figsize=(7, 4.2), dpi=150)
+    prices = load_prices()
+    by_label = {label: (cost, quality) for cost, quality, label in points}
+
+    def provider_of(label: str) -> str:
+        big = _big_model(label)
+        return prices[big].provider if big in prices else "mock"
+
+    def colour_of(label: str) -> str:
+        return PROVIDER_COLOURS.get(provider_of(label), GREY)
+
+    fig, ax = plt.subplots(figsize=(7, 4.4), dpi=150)
     widest = max(cost for cost, _, _ in points) or 1
-    # Short names by the points, pulled inwards on the right half. Along
-    # the top band, where the good designs crowd, names alternate above
-    # and below from the left so neighbours never run into each other.
+    if len(frontier) > 1:
+        ax.plot([c for c, _, _ in frontier], [100 * q for _, q, _ in frontier], color="#c9cfd8", linewidth=1.1, zorder=1)
+    # Names by the points, pulled inwards on the right half. Along the top
+    # band, where the good designs crowd, names alternate above and below
+    # from the left so neighbours never run into each other.
     top = [label for cost, quality, label in sorted(points) if quality >= 0.9]
     for cost, quality, label in points:
-        on_frontier = (cost, quality, label) in frontier
-        ax.scatter(cost, 100 * quality, s=90 if on_frontier else 60, color=CYAN if on_frontier else GREY, zorder=3)
+        modular = label.startswith("modular (")
+        colour = colour_of(label)
+        if modular:
+            ax.scatter(cost, 100 * quality, s=90, color=colour, zorder=3)
+        else:
+            ax.scatter(cost, 100 * quality, s=90, facecolors="white", edgecolors=colour, linewidths=1.8, zorder=3)
+        text = _short(label)
+        big = _big_model(label)
+        base = by_label.get(f"single ({big})") if modular and big else None
+        if base and base[0] > 0:
+            text += f"\n{100 * (cost / base[0] - 1):+.1f} % cost, {100 * (quality - base[1]):+.1f} points"
         right = cost > 0.6 * widest
         above = label in top and top.index(label) % 2 == 0
         ax.annotate(
-            _short(label),
+            text,
             (cost, 100 * quality),
             fontsize=8,
-            ha="right" if right else "left",
-            xytext=(-6 if right else 6, 8 if above else -13),
-            textcoords="offset points",
-        )
-    if len(frontier) > 1:
-        ax.plot([c for c, _, _ in frontier], [100 * q for _, q, _ in frontier], color=CYAN, linewidth=1.2, zorder=2)
-    # Each modular design against the single-prompt design on the same big
-    # model: a dashed line between the two and the distance written on it.
-    by_label = {label: (cost, quality) for cost, quality, label in points}
-    for label, (cost, quality) in by_label.items():
-        if not label.startswith("modular (") or " fallback)" not in label:
-            continue
-        big = label[label.rfind(", ") + 2 : label.rfind(" fallback)")]
-        base = by_label.get(f"single ({big})")
-        if not base or base[0] <= 0:
-            continue
-        ax.plot([base[0], cost], [100 * base[1], 100 * quality], color=GREY, linewidth=0.9, linestyle=(0, (4, 3)), zorder=1)
-        note = f"{100 * (cost / base[0] - 1):+.1f} % cost, {100 * (quality - base[1]):+.1f} points"
-        # Above a flat line; beside a steep one, where nothing else sits.
-        steep = abs(quality - base[1]) > 0.05
-        ax.annotate(
-            note,
-            ((base[0] + cost) / 2, 100 * (base[1] + quality) / 2),
-            fontsize=8,
             color=NAVY,
-            ha="left" if steep else "center",
-            va="center" if steep else "bottom",
-            xytext=(10, 0) if steep else (0, 6),
+            ha="right" if right else "left",
+            va="bottom" if above else "top",
+            xytext=(-6 if right else 6, 8 if above else -8),
             textcoords="offset points",
-            bbox={"boxstyle": "round,pad=0.25", "facecolor": "white", "edgecolor": "none", "alpha": 0.85},
+            linespacing=1.3,
         )
+    providers = sorted(
+        {provider_of(label) for _, _, label in points}, key=lambda p: list(PROVIDER_COLOURS).index(p) if p in PROVIDER_COLOURS else 99
+    )
+    handles = [
+        Line2D([], [], marker="o", linestyle="none", markersize=7, color=PROVIDER_COLOURS.get(p, GREY), label=PROVIDER_NAMES.get(p, p))
+        for p in providers
+    ]
+    handles += [
+        Line2D(
+            [],
+            [],
+            marker="o",
+            linestyle="none",
+            markersize=7,
+            markerfacecolor="white",
+            markeredgecolor=GREY,
+            markeredgewidth=1.6,
+            label="one prompt",
+        ),
+        Line2D([], [], marker="o", linestyle="none", markersize=7, color=GREY, label="modular with guards"),
+    ]
+    ax.legend(handles=handles, frameon=False, fontsize=8, loc="lower right", ncol=2)
     ax.set_xlabel("cost per 1,000 messages (USD)")
     ax.set_ylabel("fully correct messages (%)")
-    ax.set_title("Cost against quality: the Pareto frontier in cyan", loc="left", fontsize=11, color=NAVY)
-    ax.set_ylim(0, 105)
+    ax.set_title("Cost against quality: up and to the left is better", loc="left", fontsize=11, color=NAVY)
+    ax.set_ylim(0, 112)
     ax.set_xlim(left=0)
     _style(ax)
     ax.grid(axis="x", color="#e6e6e6", linewidth=0.8)
