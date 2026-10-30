@@ -13,6 +13,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import polars as pl  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
+from matplotlib.transforms import Bbox  # noqa: E402
 
 from .meter import read_ledger  # noqa: E402
 from .pricing import load_prices  # noqa: E402
@@ -114,11 +115,89 @@ def _big_model(label: str) -> str | None:
     return None
 
 
+def _distances_box(ax, rows: list[tuple[str, str]]) -> None:
+    """The distance of each modular design to the one-prompt design on the
+    same big model, one line per provider with its colour, in the empty
+    middle of the chart."""
+    if not rows:
+        return
+    x, y, step = 0.27, 0.62, 0.065
+    ax.text(x, y, "Modular with guards against one prompt, same big model", transform=ax.transAxes, fontsize=8, color=NAVY, weight="bold")
+    for index, (colour, line) in enumerate(rows, start=1):
+        line_y = y - index * step
+        ax.plot([x + 0.008], [line_y + 0.012], marker="o", markersize=5.5, color=colour, transform=ax.transAxes, clip_on=False)
+        ax.text(x + 0.025, line_y, line, transform=ax.transAxes, fontsize=8, color=NAVY)
+
+
+def _label_points(fig, ax, legend, points: list[tuple[float, float, str]]) -> None:
+    """Writes each point's short name. Each name takes the first spot
+    around its point that stays inside the chart and clear of the legend,
+    the distances box, the markers and the names already placed."""
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    frame = ax.get_window_extent(renderer)
+    radius = 7 * fig.dpi / 72
+    taken = [legend.get_window_extent(renderer)]
+    taken += [text.get_window_extent(renderer).padded(3) for text in ax.texts]
+    for cost, quality, _ in points:
+        x, y = ax.transData.transform((cost, 100 * quality))
+        taken.append(Bbox.from_bounds(x - radius, y - radius, 2 * radius, 2 * radius))
+    spots = [
+        (8, 6, "left", "bottom"),
+        (8, -6, "left", "top"),
+        (-8, 6, "right", "bottom"),
+        (-8, -6, "right", "top"),
+        (0, 12, "center", "bottom"),
+        (0, -12, "center", "top"),
+        (9, 0, "left", "center"),
+        (-9, 0, "right", "center"),
+        (8, 20, "left", "bottom"),
+        (8, -20, "left", "top"),
+        (-8, 20, "right", "bottom"),
+        (-8, -20, "right", "top"),
+    ]
+
+    def name_at(text: str, xy: tuple[float, float], spot: tuple, leader: dict | None = None):
+        dx, dy, ha, va = spot
+        return ax.annotate(
+            text,
+            xy,
+            xytext=(dx, dy),
+            textcoords="offset points",
+            ha=ha,
+            va=va,
+            fontsize=8,
+            color=NAVY,
+            linespacing=1.3,
+            arrowprops=leader,
+        )
+
+    for cost, quality, label in sorted(points, key=lambda p: p[0]):
+        text, xy = _short(label), (cost, 100 * quality)
+        chosen, chosen_box = None, None
+        for spot in spots:
+            # Measured without a line, so only the words count.
+            trial = name_at(text, xy, spot)
+            box = trial.get_window_extent(renderer).padded(2)
+            trial.remove()
+            if chosen_box is None:
+                chosen, chosen_box = spot, box  # nowhere free: the first spot
+            inside = frame.x0 <= box.x0 and box.x1 <= frame.x1 and frame.y0 <= box.y0 and box.y1 <= frame.y1
+            if inside and not any(box.overlaps(other) for other in taken):
+                chosen, chosen_box = spot, box
+                break
+        # A name set further off gets a thin line back to its point.
+        leader = {"arrowstyle": "-", "color": GREY, "lw": 0.6, "shrinkA": 1, "shrinkB": 6} if abs(chosen[1]) >= 20 else None
+        name_at(text, xy, chosen, leader)
+        taken.append(chosen_box)
+
+
 def chart_pareto(frame: pl.DataFrame, path: Path) -> list[str]:
     """One colour per provider; a hollow point is the big model on one
-    prompt, a filled one the modular design with guards. Under each
-    modular point, its distance to the one-prompt design on the same big
-    model. Lower left is better; the frontier is the grey line."""
+    prompt, a filled one the modular design with guards. A box in the
+    chart gives each modular design's distance to the one-prompt design on
+    the same big model. Up and to the left is better; the frontier is the
+    grey line."""
     points = list(zip(frame["cost_per_1k_usd"].to_list(), frame["correct"].to_list(), frame["arch"].to_list(), strict=True))
     frontier = pareto_frontier(points)
     prices = load_prices()
@@ -135,35 +214,12 @@ def chart_pareto(frame: pl.DataFrame, path: Path) -> list[str]:
     widest = max(cost for cost, _, _ in points) or 1
     if len(frontier) > 1:
         ax.plot([c for c, _, _ in frontier], [100 * q for _, q, _ in frontier], color="#c9cfd8", linewidth=1.1, zorder=1)
-    # Names by the points, pulled inwards on the right half. Along the top
-    # band, where the good designs crowd, names alternate above and below
-    # from the left so neighbours never run into each other.
-    top = [label for cost, quality, label in sorted(points) if quality >= 0.9]
     for cost, quality, label in points:
-        modular = label.startswith("modular (")
         colour = colour_of(label)
-        if modular:
-            ax.scatter(cost, 100 * quality, s=90, color=colour, zorder=3)
+        if label.startswith("modular ("):
+            ax.scatter(cost, 100 * quality, s=80, color=colour, zorder=3)
         else:
-            ax.scatter(cost, 100 * quality, s=90, facecolors="white", edgecolors=colour, linewidths=1.8, zorder=3)
-        text = _short(label)
-        big = _big_model(label)
-        base = by_label.get(f"single ({big})") if modular and big else None
-        if base and base[0] > 0:
-            text += f"\n{100 * (cost / base[0] - 1):+.1f} % cost, {100 * (quality - base[1]):+.1f} points"
-        right = cost > 0.6 * widest
-        above = label in top and top.index(label) % 2 == 0
-        ax.annotate(
-            text,
-            (cost, 100 * quality),
-            fontsize=8,
-            color=NAVY,
-            ha="right" if right else "left",
-            va="bottom" if above else "top",
-            xytext=(-6 if right else 6, 8 if above else -8),
-            textcoords="offset points",
-            linespacing=1.3,
-        )
+            ax.scatter(cost, 100 * quality, s=80, facecolors="white", edgecolors=colour, linewidths=1.8, zorder=3)
     providers = sorted(
         {provider_of(label) for _, _, label in points}, key=lambda p: list(PROVIDER_COLOURS).index(p) if p in PROVIDER_COLOURS else 99
     )
@@ -185,15 +241,30 @@ def chart_pareto(frame: pl.DataFrame, path: Path) -> list[str]:
         ),
         Line2D([], [], marker="o", linestyle="none", markersize=7, color=GREY, label="modular with guards"),
     ]
-    ax.legend(handles=handles, frameon=False, fontsize=8, loc="lower right", ncol=2)
+    legend = ax.legend(handles=handles, frameon=False, fontsize=8, loc="lower right", ncol=2)
     ax.set_xlabel("cost per 1,000 messages (USD)")
     ax.set_ylabel("fully correct messages (%)")
     ax.set_title("Cost against quality: up and to the left is better", loc="left", fontsize=11, color=NAVY)
-    ax.set_ylim(0, 112)
-    ax.set_xlim(left=0)
+    ax.set_ylim(0, 110)
+    ax.set_xlim(0, widest * 1.08)
     _style(ax)
     ax.grid(axis="x", color="#e6e6e6", linewidth=0.8)
+    distances = []
+    for provider in providers:
+        for cost, quality, label in points:
+            big = _big_model(label)
+            base = by_label.get(f"single ({big})") if label.startswith("modular (") and big else None
+            if provider_of(label) == provider and base and base[0] > 0:
+                distances.append(
+                    (
+                        PROVIDER_COLOURS.get(provider, GREY),
+                        f"{PROVIDER_NAMES.get(provider, provider)}: {100 * (cost / base[0] - 1):+.1f} % cost, "
+                        f"{100 * (quality - base[1]):+.1f} points",
+                    )
+                )
+    _distances_box(ax, distances)
     fig.tight_layout()
+    _label_points(fig, ax, legend, points)
     fig.savefig(path)
     plt.close(fig)
     return [label for _, _, label in frontier]

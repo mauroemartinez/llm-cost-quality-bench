@@ -1,0 +1,24 @@
+{
+ "request": {
+  "provider": "anthropic",
+  "model": "claude-haiku-5-5",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 3000 pcs of garden hose 20 m. The most we are willing to pay: USD 5.06 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: no. Packaging: export cartons.\nSupplier: Evergreen Homeware Factory\nSupplier message:\nDear Sir/Madam,\nOk, we accept USD 5.06 per pcs CIF for 3000 pcs.\nPlease confirm so we prepare the proforma invoice.\nWaiting for your reply",
+  "max_tokens": 60,
+  "temperature": 0.0,
+  "settings": {
+   "thinking": {
+    "type": "disabled"
+   }
+  }
+ },
+ "text": "{\"intent\": \"counter_reply\"}",
+ "usage": {
+  "input_tokens": 386,
+  "cached_tokens": 0,
+  "output_tokens": 15,
+  "exact": true
+ },
+ "latency_ms": 1552.628800040111,
+ "recorded_at": "2026-10-30T17:12:36+00:00"
+}

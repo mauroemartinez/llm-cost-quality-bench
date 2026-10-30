@@ -37,9 +37,7 @@ def _prices(message: str) -> list[tuple[str, float, int]]:
 
 def _main_price(message: str) -> tuple[str, float] | None:
     """The last price that is not an alternative ("also offer DDP ... at")."""
-    candidates = [
-        (c, v) for c, v, pos in _prices(message) if "also offer" not in message[max(0, pos - 60) : pos].lower()
-    ]
+    candidates = [(c, v) for c, v, pos in _prices(message) if "also offer" not in message[max(0, pos - 60) : pos].lower()]
     return candidates[-1] if candidates else None
 
 

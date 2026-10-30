@@ -1,0 +1,24 @@
+{
+ "request": {
+  "provider": "anthropic",
+  "model": "claude-haiku-5-5",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 1000 pcs of ceramic coffee mug 350 ml. The most we are willing to pay: USD 0.89 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: yes. Packaging: export cartons.\nSupplier: Brightway Electronics Co., Ltd.\nSupplier message:\nDear friend,\nThanks for your inquiry about the ceramic coffee mug 350 ml.\nNormally USD 1.18/pcs FOB. For this order I can offer USD 1.10 per pcs.\nMOQ: 3000 pcs per colour.\nProduction needs 25 days.\nPlease confirm the quantiy so we can prepare the PI.\nThanks and regards",
+  "max_tokens": 60,
+  "temperature": 0.0,
+  "settings": {
+   "thinking": {
+    "type": "disabled"
+   }
+  }
+ },
+ "text": "{\"intent\": \"quote\"}",
+ "usage": {
+  "input_tokens": 454,
+  "cached_tokens": 0,
+  "output_tokens": 12,
+  "exact": true
+ },
+ "latency_ms": 890.7888000248931,
+ "recorded_at": "2026-10-30T17:11:31+00:00"
+}

@@ -1,0 +1,24 @@
+{
+ "request": {
+  "provider": "anthropic",
+  "model": "claude-haiku-5-5",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 3000 sets of PPR pipe fusion welder, gas heated. The most we are willing to pay: USD 182.45 per sets (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Valparaiso. Logo printing: no. Packaging: export cartons.\nSupplier: Sunrise Textile Mill\nSupplier message:\nHello dear,\nThanks for your inquiry about the PPR pipe fusion welder, gas heated.\nUnit price 199.07 EUR (FOB Shenzhen).\nIf you prefer, we can also offer DDP to your warehouse at EUR 262.23 per sets.\nMOQ: 1000 sets per colour.\nDelivery time 15 to 25 days after deposit.\nLooking forward to your order.\nThanks and regards",
+  "max_tokens": 60,
+  "temperature": 0.0,
+  "settings": {
+   "thinking": {
+    "type": "disabled"
+   }
+  }
+ },
+ "text": "{\"intent\": \"quote\"}",
+ "usage": {
+  "input_tokens": 471,
+  "cached_tokens": 0,
+  "output_tokens": 12,
+  "exact": true
+ },
+ "latency_ms": 825.2151000197046,
+ "recorded_at": "2026-10-30T17:21:20+00:00"
+}

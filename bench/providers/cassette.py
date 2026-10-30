@@ -1,7 +1,8 @@
 """Recorded responses, so anyone can run the whole bench with no API key.
 
 A cassette is one JSON file per distinct request (provider, model, prompts,
-max_tokens, temperature). `record` calls the API and saves the answer with
+max_tokens, temperature, and any provider setting that changes the answer,
+such as Claude's thinking switch). `record` calls the API and saves the answer with
 its usage and latency; `offline` only replays; `live` calls without saving.
 Replays keep the recorded usage, so costs are the real ones, and they cost
 nothing today, which the meter knows (from_cassette)."""
@@ -49,6 +50,9 @@ class Cassette:
             "max_tokens": max_tokens,
             "temperature": temperature,
         }
+        extra = getattr(self.inner, "request_extra", None)
+        if extra and (settings := extra(model)):
+            request["settings"] = settings
         path = self._path(model, request)
         if self.mode != "live" and path.exists():
             data = json.loads(path.read_text(encoding="utf-8"))

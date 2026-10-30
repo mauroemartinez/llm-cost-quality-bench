@@ -86,8 +86,7 @@ class Meter:
             handle.write(record.model_dump_json() + "\n")
         if self.max_usd is not None and self.real_usd > self.max_usd:
             raise BudgetExceeded(
-                f"spent USD {self.real_usd:.4f} on live calls, over the cap of USD {self.max_usd:.2f}; "
-                "raise --max-usd or run offline"
+                f"spent USD {self.real_usd:.4f} on live calls, over the cap of USD {self.max_usd:.2f}; raise --max-usd or run offline"
             )
         return record
 

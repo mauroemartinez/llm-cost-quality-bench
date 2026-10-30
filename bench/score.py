@@ -72,7 +72,16 @@ def score_case(result: CaseResult, case: Case) -> dict:
     truth = case.truth
     got = result.extraction
     intent_ok = got is not None and got.intent == truth.intent
-    fields = {name: (got is not None and field_ok(name, getattr(got.quote, name), getattr(truth.quote, name))) for name in FIELDS}
+    # A field is right when it matches the truth, or the case's second fair
+    # reading of it (Case.also_accept).
+    fields = {
+        name: got is not None
+        and (
+            field_ok(name, getattr(got.quote, name), getattr(truth.quote, name))
+            or (name in case.also_accept and field_ok(name, getattr(got.quote, name), case.also_accept[name]))
+        )
+        for name in FIELDS
+    }
     extraction_ok = all(fields.values())
     replied_ok = reply_ok(result.reply_text, case)
     return {

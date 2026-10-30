@@ -1,0 +1,24 @@
+{
+ "request": {
+  "provider": "anthropic",
+  "model": "claude-haiku-5-5",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 2000 sets of PPR pipe fusion welder, gas heated. The most we are willing to pay: USD 172.94 per sets (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Montevideo. Logo printing: yes. Packaging: export cartons.\nSupplier: Northstar Tools Manufacture\nSupplier message:\nDear Sir/Madam,\nThanks for your inquiry about the PPR pipe fusion welder, gas heated.\nNormally EUR 216.97/sets EXW. For this order I can offer EUR 199.07 per sets.\nMOQ: 100 sets per colour.\nProduction time about 5 weeks.\nAny question please let me know.\nBest regards",
+  "max_tokens": 60,
+  "temperature": 0.0,
+  "settings": {
+   "thinking": {
+    "type": "disabled"
+   }
+  }
+ },
+ "text": "{\"intent\": \"quote\"}",
+ "usage": {
+  "input_tokens": 444,
+  "cached_tokens": 0,
+  "output_tokens": 12,
+  "exact": true
+ },
+ "latency_ms": 1007.2869000141509,
+ "recorded_at": "2026-10-30T17:08:45+00:00"
+}

@@ -1,0 +1,24 @@
+{
+ "request": {
+  "provider": "anthropic",
+  "model": "claude-haiku-5-5",
+  "system": "TASK: reply\nYou write the buyer's reply to one supplier message, as the purchasing team of an importer.\n- English, short and polite. No placeholders, no brackets.\n- Never mention that we have a \"target\" or any internal limit; never explain your reasoning.\nAnswer with JSON only: {\"reply\": string}\nSituation: The supplier cannot supply. Thank them, close politely and leave the door open. Do not ask for a price or a quote.",
+  "user": "Our order: 5000 pcs of memory foam pillow 60 x 40 cm. The most we are willing to pay: USD 2.77 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: no. Packaging: export cartons.\nSupplier: Golden Harbor Trading\nSupplier message:\nHello dear,\nSorry, your order quantity is too small for our factory, we cannot supply this time.\nHope to cooperate in the future.\nThanks and regards\nWhat we read from the message (JSON): {\"intent\":\"decline\",\"quote\":{\"price\":null,\"currency\":null,\"moq\":null,\"moq_unit\":null,\"lead_time_days\":null,\"incoterm\":null,\"payment_terms\":null}}",
+  "max_tokens": 400,
+  "temperature": 0.0,
+  "settings": {
+   "thinking": {
+    "type": "disabled"
+   }
+  }
+ },
+ "text": "{\"reply\": \"Dear Golden Harbor Trading team,\\n\\nThank you very much for your prompt response and for letting us know. We understand that a 5,000-piece order is below your minimum for production, and we appreciate your honesty.\\n\\nWe would be glad to work with you in the future, should our volumes grow or should you have a suitable program for smaller quantities. Please keep us in mind.\\n\\nKind regards,\\nPurchasing Team\"}",
+ "usage": {
+  "input_tokens": 416,
+  "cached_tokens": 0,
+  "output_tokens": 149,
+  "exact": true
+ },
+ "latency_ms": 1612.8529999987222,
+ "recorded_at": "2026-10-30T17:18:01+00:00"
+}

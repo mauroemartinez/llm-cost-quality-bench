@@ -1,0 +1,24 @@
+{
+ "request": {
+  "provider": "anthropic",
+  "model": "claude-haiku-5-5",
+  "system": "TASK: reply\nYou write the buyer's reply to one supplier message, as the purchasing team of an importer.\n- English, short and polite. No placeholders, no brackets.\n- Never mention that we have a \"target\" or any internal limit; never explain your reasoning.\nAnswer with JSON only: {\"reply\": string}\nSituation: The supplier asked us something before quoting. Answer it from our facts, briefly, and invite them to quote.",
+  "user": "Our order: 1000 pcs of wireless optical mouse. The most we are willing to pay: USD 2.63 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: no. Packaging: export cartons.\nSupplier: Redwood Outdoor Gear\nSupplier message:\nDear friend,\nThanks for your inquiry about the wireless optical mouse. Before quoting we need to confirm something.\nPlease confirm the packing requirement.\nWaiting for your reply\nWhat we read from the message (JSON): {\"intent\":\"question\",\"quote\":{\"price\":null,\"currency\":null,\"moq\":null,\"moq_unit\":null,\"lead_time_days\":null,\"incoterm\":null,\"payment_terms\":null}}",
+  "max_tokens": 400,
+  "temperature": 0.0,
+  "settings": {
+   "thinking": {
+    "type": "disabled"
+   }
+  }
+ },
+ "text": "{\"reply\": \"Dear Redwood Outdoor Gear team,\\n\\nThank you for your message. Regarding packing, we require standard export cartons, with no logo printing on the products or packaging. The order is for 1000 pcs of wireless optical mouse, shipping to Santos.\\n\\nPlease send us your quotation based on these requirements, including unit price, lead time, and payment terms.\\n\\nBest regards,\\nPurchasing Team\"}",
+ "usage": {
+  "input_tokens": 413,
+  "cached_tokens": 0,
+  "output_tokens": 150,
+  "exact": true
+ },
+ "latency_ms": 2729.3382000061683,
+ "recorded_at": "2026-10-30T17:20:51+00:00"
+}

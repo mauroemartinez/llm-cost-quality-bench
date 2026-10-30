@@ -1,0 +1,24 @@
+{
+ "request": {
+  "provider": "anthropic",
+  "model": "claude-haiku-5-5",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 5000 pcs of rubber yoga mat 6 mm. The most we are willing to pay: USD 5.01 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: yes. Packaging: export cartons.\nSupplier: Sunrise Textile Mill\nSupplier message:\nHello,\nThanks for your inquiry about the rubber yoga mat 6 mm.\nNormally USD 5.86/pcs CFR. For this order I can offer USD 5.40 per pcs.\nMOQ: 1000 pcs per colour.\nPayment: 30% deposit, 70% T/T before loading.\nLooking forward to your order.\nHave a nice day",
+  "max_tokens": 60,
+  "temperature": 0.0,
+  "settings": {
+   "thinking": {
+    "type": "disabled"
+   }
+  }
+ },
+ "text": "{\"intent\": \"quote\"}",
+ "usage": {
+  "input_tokens": 445,
+  "cached_tokens": 0,
+  "output_tokens": 12,
+  "exact": true
+ },
+ "latency_ms": 1787.8709000069648,
+ "recorded_at": "2026-10-30T17:21:15+00:00"
+}

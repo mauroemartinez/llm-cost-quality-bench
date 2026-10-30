@@ -51,25 +51,30 @@ This repository is that method, in the open, on a task anyone can inspect:
 
 Every number this repository produces comes from **synthetic data**. Nothing here is a production message, prompt or price.
 
-**Recorded run, 2026-10-29: two providers, 300 messages, usage reported by the API on every call.** OpenAI with gpt-5.4 as the big model and gpt-5.4-mini as the small one; DeepSeek with deepseek-v4-pro and deepseek-flash. Full report in [docs/report-2026-10-29.md](docs/report-2026-10-29.md). Replay it with no key: `BENCH_MODE=offline bench all --pair openai --pair deepseek --n 300`.
+**Recorded run, 2026-10-30: three providers, 300 messages, usage reported by the API on every call.** OpenAI with gpt-5.4 as the big model and gpt-5.4-mini as the small one; Anthropic with claude-sonnet-5-5 and claude-haiku-5-5; DeepSeek with deepseek-v4-pro and deepseek-flash. Full report in [docs/report-2026-10-30.md](docs/report-2026-10-30.md). Replay it with no key: `BENCH_MODE=offline bench all --pair openai --pair anthropic --pair deepseek --n 300`.
 
 | Architecture | Fully correct | Cost per 1,000 messages | Latency p50 | Calls per message |
 |---|---|---|---|---|
-| gpt-5.4, one prompt | 96.3 % | USD 2.97 | 2.0 s | 1.0 |
+| gpt-5.4, one prompt | 96.7 % | USD 2.97 | 2.0 s | 1.0 |
 | gpt-5.4-mini with guards, gpt-5.4 as fallback | 96.0 % | USD 0.99 | 3.2 s | 2.3 |
-| deepseek-v4-pro, one prompt | 74.0 % | USD 0.72 | 1.8 s | 1.0 |
-| deepseek-flash with guards, deepseek-v4-pro as fallback | 95.0 % | USD 0.30 | 3.3 s | 2.25 |
+| claude-sonnet-5-5, one prompt | 97.7 % | USD 2.73 | 3.0 s | 1.0 |
+| claude-haiku-5-5 with guards, claude-sonnet-5-5 as fallback | 98.0 % | USD 0.26 | 3.6 s | 2.3 |
+| deepseek-v4-pro, one prompt | 79.0 % | USD 0.72 | 1.8 s | 1.0 |
+| deepseek-flash with guards, deepseek-v4-pro as fallback | 96.3 % | USD 0.30 | 3.3 s | 2.25 |
 
-![Cost against quality, both pairs](docs/img/pareto-2026-10-29.png)
+![Cost against quality, three providers](docs/img/pareto-2026-10-30.png)
 
-<p align="center"><em>Same quality, a fraction of the cost: both modular designs sit on the frontier. The guards are what make a small model usable, and what a big model on one prompt still gets wrong.</em></p>
+<p align="center"><em>Same quality or better, for 58 % to 90 % less: with all three providers, a small model with validation guards matches or beats the big model on one prompt. Gaps under a point are two or three messages in 300.</em></p>
 
-- **OpenAI.** The modular design costs **66.5 % less** at the same quality: the 0.3-point gap is one message in 300, and on the calibration run (gpt-5.4 against itself on 30 messages) the model gave the same answer 30 times out of 30.
-- **DeepSeek.** On one prompt, deepseek-v4-pro writes "above our target" in 57 of 300 replies, which the policy forbids (it tells the supplier we have a ceiling), so only 74.0 % of its messages pass. With the guards, deepseek-flash reaches 95.0 % at USD 0.30 per thousand: the cheapest point on the frontier, 58 % below its own big model and 70 % below the OpenAI modular, one point under it. Its calibration also came back 30 out of 30.
-- **The guards earned their keep** on both small models: on gpt-5.4-mini they caught 9 replies that leaked our limit and 5 that accepted instead of countering, fixed 15 messages with one retry and sent 3 to the big model; deepseek-flash needed 2 retries and never the big model.
-- **What each one still gets wrong:** the small models read 9 to 11 of the 125 plain quotes as another intent; gpt-5.4 misreads one field in 9 messages (a lead-time range, a currency next to an alternative Incoterm). Nobody invents a number: the rules check every figure against the message.
-- **Cache and clock.** DeepSeek's automatic prompt cache served 72 % of the big model's input tokens, priced at the cache rate in the ledger. DeepSeek also bills half price off-peak (16:30 to 00:30 UTC), which the ledger does not apply, so the real invoice is below the list cost shown.
-- **What the recordings cost** at list price: OpenAI USD 1.19 plus USD 0.18 of calibration; DeepSeek USD 0.31 plus USD 0.03.
+- **OpenAI.** The modular design costs **66.5 % less** and lands 0.7 points under the big model: two messages in 300. On the calibration run (gpt-5.4 against itself on 30 messages) the model gave the same answer 30 times out of 30.
+- **Anthropic.** claude-haiku-5-5 with guards reaches **98.0 % at USD 0.26 per thousand**, 90.3 % below claude-sonnet-5-5 on one prompt and 0.3 points above it: the cheapest and most accurate point on the chart. Its calibration also came back 30 out of 30.
+- **DeepSeek.** On one prompt, deepseek-v4-pro writes "above our target" in 57 of 300 replies, which the policy forbids (it tells the supplier we have a ceiling), so only 79.0 % of its messages pass. With the guards, deepseek-flash reaches 96.3 % at USD 0.30 per thousand, 58.3 % below its big model. Calibration: 30 out of 30.
+- **The guards earned their keep** on every small model. On gpt-5.4-mini they caught 9 replies that leaked our limit and 5 that accepted instead of countering, fixed 15 messages with one retry and sent 3 to the big model. On claude-haiku-5-5 they caught 6 leaks, 3 acceptances above our target, 7 answers that were not valid JSON and 2 replies that ran too long, fixed 15 messages and sent 2 to the big model. deepseek-flash needed 2 retries and never the big model.
+- **What each one still gets wrong:** the small models misread the intent of some messages (gpt-5.4-mini 9 quotes, deepseek-flash 11 quotes, claude-haiku-5-5 1 quote and 4 counter-replies); gpt-5.4 misreads one field in 8 messages (a lead-time range, a currency next to an alternative Incoterm); claude-sonnet-5-5 accepts a price above our target in 5 replies. Nobody invents a number: the rules check every figure against the message.
+- **Claude's thinking.** claude-sonnet-5-5 and claude-haiku-5-5 reason by default, and that hidden reasoning counts against the output cap: with it on and the same 400-token cap, a third of their answers came back empty or cut. This run turns it off (`disabled` on Haiku, `between_tools` on Sonnet, which take no `temperature` either); the setting is part of each cassette's key. The other providers ran with their defaults.
+- **Fair scoring.** When a supplier accepts "for 1000 rolls", that is the size of this order, not a minimum: an empty minimum order and 1000 both score as right.
+- **Cache and clock.** The prompt cache served 80 % of claude-sonnet-5-5's input tokens and 72 % of deepseek-v4-pro's, each priced at its cache rate in the ledger. DeepSeek also bills half price off-peak (16:30 to 00:30 UTC), which the ledger does not apply, so its real invoice is below the list cost shown.
+- **What the recordings cost** at list price: OpenAI USD 1.19 plus USD 0.18 of calibration; Anthropic USD 0.90 plus USD 0.17, after a first attempt with thinking on that was discarded; DeepSeek USD 0.31 plus USD 0.03.
 
 Simulated runs (the mock provider, no model behind it) still run in CI on every push and publish their report as an artifact; those charts only show the shape of the output, not how any model performs.
 

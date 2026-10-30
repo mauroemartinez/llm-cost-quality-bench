@@ -5,6 +5,7 @@ line of validation; business rules live in rules.py."""
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -129,6 +130,9 @@ class Case(BaseModel):
     ours: OurFacts
     truth: Extraction
     reply: ReplyRequirements
+    # Fields with a second reading that is just as correct: the truth holds
+    # one, this holds the other, and either scores as right.
+    also_accept: dict[str, Any] = Field(default_factory=dict)
 
 
 class Usage(BaseModel):

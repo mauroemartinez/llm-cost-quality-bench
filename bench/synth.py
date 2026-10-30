@@ -101,9 +101,7 @@ def _lead_time(rng: random.Random) -> tuple[str, int]:
     return f"Production time about {weeks} weeks.", weeks * 7
 
 
-def _quote_message(
-    rng: random.Random, product: str, unit: str, list_price: float, ours: OurFacts
-) -> tuple[str, Quote, ReplyRequirements]:
+def _quote_message(rng: random.Random, product: str, unit: str, list_price: float, ours: OurFacts) -> tuple[str, Quote, ReplyRequirements]:
     currency = rng.choices(["USD", "EUR", "CNY"], weights=[80, 10, 10])[0]
     price_in_currency = round(list_price / FX_TO_USD[currency], 2)
     incoterm = rng.choices(["FOB", "EXW", "CIF", "CFR", "FCA"], weights=[55, 15, 15, 10, 5])[0]
@@ -181,7 +179,7 @@ def _quote_message(
 
 def _counter_reply_message(
     rng: random.Random, product: str, unit: str, list_price: float, ours: OurFacts
-) -> tuple[str, Quote, ReplyRequirements]:
+) -> tuple[str, Quote, ReplyRequirements, dict]:
     """The supplier answers a counter-offer we made at our target price (always in USD)."""
     target = ours.target_price
     incoterm = rng.choice(["FOB", "EXW", "CIF"])
@@ -197,8 +195,10 @@ def _counter_reply_message(
             ]
         )
         lines.append(accepted)
-        # When the acceptance names the quantity, that is the quantity on the
-        # table: the truth carries it, as any reader would.
+        # When the acceptance names the quantity ("for 1000 rolls"), that is
+        # the size of this order, not the supplier's minimum. Leaving the
+        # minimum empty and reading the quantity into it are both fair, so
+        # the case accepts either.
         quantity_stated = " for " in accepted
         lines.append(rng.choice(["Please confirm so we prepare the proforma invoice.", "Shall we go ahead with the PI?"]))
         reply = ReplyRequirements(must_ask=["proforma invoice"])
@@ -225,14 +225,9 @@ def _counter_reply_message(
         )
         reply = ReplyRequirements(must_counter=True)
     lines.append(rng.choice(SIGNOFFS))
-    quote = Quote(
-        price=price,
-        currency="USD",
-        incoterm=incoterm,
-        moq=ours.quantity if quantity_stated else None,
-        moq_unit=unit if quantity_stated else None,
-    )
-    return "\n".join(lines), quote, reply
+    quote = Quote(price=price, currency="USD", incoterm=incoterm)
+    also_accept = {"moq": ours.quantity, "moq_unit": unit} if quantity_stated else {}
+    return "\n".join(lines), quote, reply, also_accept
 
 
 def _question_message(rng: random.Random, product: str, ours: OurFacts) -> tuple[str, ReplyRequirements]:
@@ -296,10 +291,11 @@ def generate(n: int = 300, seed: int = 7) -> list[Case]:
         )
         intent = rng.choices(intents, weights=weights)[0]
         supplier = rng.choice(SUPPLIERS)
+        also_accept: dict = {}
         if intent is Intent.QUOTE:
             message, quote, reply = _quote_message(rng, product, unit, list_price, ours)
         elif intent is Intent.COUNTER_REPLY:
-            message, quote, reply = _counter_reply_message(rng, product, unit, list_price, ours)
+            message, quote, reply, also_accept = _counter_reply_message(rng, product, unit, list_price, ours)
         elif intent is Intent.QUESTION:
             message, reply = _question_message(rng, product, ours)
             quote = Quote()
@@ -315,6 +311,7 @@ def generate(n: int = 300, seed: int = 7) -> list[Case]:
                 ours=ours,
                 truth=Extraction(intent=intent, quote=quote),
                 reply=reply,
+                also_accept=also_accept,
             )
         )
     return cases

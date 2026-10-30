@@ -1,0 +1,24 @@
+{
+ "request": {
+  "provider": "anthropic",
+  "model": "claude-haiku-5-5",
+  "system": "TASK: reply\nYou write the buyer's reply to one supplier message, as the purchasing team of an importer.\n- English, short and polite. No placeholders, no brackets.\n- Never mention that we have a \"target\" or any internal limit; never explain your reasoning.\nAnswer with JSON only: {\"reply\": string}\nSituation: The supplier cannot supply. Thank them, close politely and leave the door open. Do not ask for a price or a quote.",
+  "user": "Our order: 1000 pcs of cotton tote bag. The most we are willing to pay: USD 0.62 per pcs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: yes. Packaging: export cartons.\nSupplier: Silver Crane Plastics\nSupplier message:\nDear friend,\nSorry, we do not produce the cotton tote bag. We only make related items.\nHope to cooperate in the future.\nHave a nice day\nWhat we read from the message (JSON): {\"intent\":\"decline\",\"quote\":{\"price\":null,\"currency\":null,\"moq\":null,\"moq_unit\":null,\"lead_time_days\":null,\"incoterm\":null,\"payment_terms\":null}}",
+  "max_tokens": 400,
+  "temperature": 0.0,
+  "settings": {
+   "thinking": {
+    "type": "disabled"
+   }
+  }
+ },
+ "text": "{\"reply\": \"Dear Silver Crane Plastics team,\\n\\nThank you for letting us know, and for your prompt response.\\n\\nWe understand that cotton tote bags are outside your production range, so we will not trouble you further on this order. We appreciate your time.\\n\\nWe would be glad to stay in touch and to consider working together in the future should a suitable item come up.\\n\\nBest regards,\\nPurchasing Team\"}",
+ "usage": {
+  "input_tokens": 405,
+  "cached_tokens": 0,
+  "output_tokens": 142,
+  "exact": true
+ },
+ "latency_ms": 1440.0246000150219,
+ "recorded_at": "2026-10-30T17:23:01+00:00"
+}

@@ -1,0 +1,24 @@
+{
+ "request": {
+  "provider": "anthropic",
+  "model": "claude-haiku-5-5",
+  "system": "TASK: classify\nYou classify one supplier message.\nIntents (exactly one):\n- quote: the supplier gives a price and terms.\n- counter_reply: the supplier answers a counter-offer we made (accepts it, meets halfway or refuses).\n- question: the supplier asks us something before quoting.\n- decline: the supplier cannot supply.\n- acknowledgement: \"ok\", \"noted\", \"will send tomorrow\": nothing to answer.\nAnswer with JSON only: {\"intent\": \"quote|counter_reply|question|decline|acknowledgement\"}",
+  "user": "Our order: 1000 pairs of children's rain boots. The most we are willing to pay: USD 4.33 per pairs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Valparaiso. Logo printing: no. Packaging: export cartons.\nSupplier: Silver Crane Plastics\nSupplier message:\nHello dear,\nThanks for your inquiry about the children's rain boots.\nCIF Shenzhen price: USD 4.70/pairs.\nIf you prefer, we can also offer DDP to your warehouse at USD 6.18 per pairs.\nMinimum order 5000 pairs.\nDelivery time 20 to 30 days after deposit.\nPlease confirm the quantiy so we can prepare the PI.\nWaiting for your reply",
+  "max_tokens": 60,
+  "temperature": 0.0,
+  "settings": {
+   "thinking": {
+    "type": "disabled"
+   }
+  }
+ },
+ "text": "{\"intent\": \"quote\"}",
+ "usage": {
+  "input_tokens": 461,
+  "cached_tokens": 0,
+  "output_tokens": 12,
+  "exact": true
+ },
+ "latency_ms": 1034.309900016524,
+ "recorded_at": "2026-10-30T17:23:31+00:00"
+}

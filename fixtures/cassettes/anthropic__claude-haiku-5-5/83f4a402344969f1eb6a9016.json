@@ -1,0 +1,24 @@
+{
+ "request": {
+  "provider": "anthropic",
+  "model": "claude-haiku-5-5",
+  "system": "TASK: reply\nYou write the buyer's reply to one supplier message, as the purchasing team of an importer.\n- English, short and polite. No placeholders, no brackets.\n- Never mention that we have a \"target\" or any internal limit; never explain your reasoning.\nAnswer with JSON only: {\"reply\": string}\nSituation: The supplier cannot supply. Thank them, close politely and leave the door open. Do not ask for a price or a quote.",
+  "user": "Our order: 500 pairs of children's rain boots. The most we are willing to pay: USD 3.88 per pairs (EUR counts as 1.08 USD, CNY as 1/7.2 USD). Destination port: Santos. Logo printing: yes. Packaging: export cartons.\nSupplier: Lantern Hill Industrial\nSupplier message:\nHello,\nUnfortunately we cannot supply the children's rain boots at the moment, our line is fully booked.\nHope to cooperate in the future.\nHave a nice day\nWhat we read from the message (JSON): {\"intent\":\"decline\",\"quote\":{\"price\":null,\"currency\":null,\"moq\":null,\"moq_unit\":null,\"lead_time_days\":null,\"incoterm\":null,\"payment_terms\":null}}",
+  "max_tokens": 400,
+  "temperature": 0.0,
+  "settings": {
+   "thinking": {
+    "type": "disabled"
+   }
+  }
+ },
+ "text": "{\"reply\": \"Hello,\\n\\nThank you for letting us know, and for your quick response.\\n\\nWe understand that your line is fully booked at the moment. We appreciate your honesty and would be glad to work with you in the future, so please keep us in mind for upcoming orders.\\n\\nHave a nice day!\\n\\nBest regards,\\nPurchasing Team\"}",
+ "usage": {
+  "input_tokens": 409,
+  "cached_tokens": 0,
+  "output_tokens": 122,
+  "exact": true
+ },
+ "latency_ms": 1194.178300036583,
+ "recorded_at": "2026-10-30T17:10:22+00:00"
+}
