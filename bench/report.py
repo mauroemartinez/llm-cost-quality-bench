@@ -136,7 +136,7 @@ def chart_pareto(frame: pl.DataFrame, path: Path) -> list[str]:
         if not base or base[0] <= 0:
             continue
         ax.plot([base[0], cost], [100 * base[1], 100 * quality], color=GREY, linewidth=0.9, linestyle=(0, (4, 3)), zorder=1)
-        note = f"{100 * (cost / base[0] - 1):+.1f} % cost, {100 * (quality - base[1]):+.1f} pt"
+        note = f"{100 * (cost / base[0] - 1):+.1f} % cost, {100 * (quality - base[1]):+.1f} points"
         # Above a flat line; beside a steep one, where nothing else sits.
         steep = abs(quality - base[1]) > 0.05
         ax.annotate(
