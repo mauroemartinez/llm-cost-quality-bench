@@ -8,6 +8,8 @@ By [GlobalAIze](https://www.globalaize.com). 100 % synthetic data. Runs with no 
 
 [Versión en español](README.es.md)
 
+![The benchmark in 38 seconds: one big prompt against a modular design with guards, on three providers, cost against quality](docs/img/film-en.gif)
+
 ## The problem
 
 An AI agent that answers suppliers, reads quotes or classifies messages is usually built once, with the biggest model available and one long prompt, and then left running. Two things go wrong quietly:
