@@ -8,6 +8,8 @@ Por [GlobalAIze](https://www.globalaize.com). Datos 100 % sintéticos. Corre sin
 
 [English version](README.md)
 
+![El benchmark en 38 segundos: un prompt grande contra un diseño modular con controles, en tres proveedores, costo contra calidad](docs/img/film-es.gif)
+
 ## El problema
 
 Un agente de IA que contesta proveedores, lee cotizaciones o clasifica mensajes suele armarse una vez, con el modelo más grande disponible y un prompt largo, y queda corriendo. Dos cosas fallan en silencio:
