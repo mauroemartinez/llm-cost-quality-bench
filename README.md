@@ -1,12 +1,15 @@
 # llm-cost-quality-bench
 
+<p>
+  <a href="README.md"><img src="https://raw.githubusercontent.com/mauroemartinez/mauroemartinez/main/assets/lang/en-active.svg" alt="English" height="30"></a>
+  <a href="README.es.md"><img src="https://raw.githubusercontent.com/mauroemartinez/mauroemartinez/main/assets/lang/es.svg" alt="Leer en español" height="30"></a>
+</p>
+
 **Measure what an LLM costs and how well it works on a real business task, before you trust it with the task.**
 By [GlobalAIze](https://www.globalaize.com). 100 % synthetic data. Runs with no API keys.
 
 [![offline bench](https://github.com/mauroemartinez/llm-cost-quality-bench/actions/workflows/ci.yml/badge.svg)](https://github.com/mauroemartinez/llm-cost-quality-bench/actions/workflows/ci.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-
-[Versión en español](README.es.md)
 
 ![The benchmark in 38 seconds: one big prompt against a modular design with guards, on three providers, cost against quality](docs/img/film-en.gif)
 
